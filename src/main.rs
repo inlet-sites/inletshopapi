@@ -1,6 +1,8 @@
 use actix_web::{HttpServer, web};
 use mongodb::{Client, Database};
 
+mod routes;
+
 #[actix_web::main]
 async fn main() {
     let uri = if node_env == "production" {
