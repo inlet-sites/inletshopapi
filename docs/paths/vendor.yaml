@@ -1,0 +1,107 @@
+/vendor/{vendorId}/password/{token}:
+  put:
+    operationId: vendorCreatePassword
+    summary: Create password TODO
+    description: Allows a new user to create their password in order to grant them access.
+    tags: [Vendor]
+    parameters:
+      - name: vendorId
+        in: path
+        required: true
+        description: Vendor ID (ObjectId)
+        schema:
+          type: string
+          example: 68e437e1f2235a39d7ce5f47
+
+      - name: token
+        in: path
+        required: true
+        description: Vendor token (UUID)
+        schema:
+          type: string
+          example: 92d98d7b-1279-488e-ae2d-652920c06209
+
+    requestBody:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - password
+              - confirmPassword
+            properties:
+              password:
+                type: string
+                format: password
+                description: New password for the vendor
+                example: password123
+              confirmPassword:
+                type: string
+                format: password
+                description: Same password for confirmation
+                example: password123
+
+    responses:
+      "200":
+        description: "Password created (always returns '{success: true}')"
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+
+/vendor/{vendorId}/password:
+  put:
+    operationId: vendorChangePassword
+    summary: TODO Change password
+    description: Change the user password
+    tags: [Vendor]
+    parameters:
+      - name: vendorId
+        in: path
+        required: true
+        description: Vendor ID (ObjectID)
+        schema:
+          type: string
+          example: 68e437e1f2235a39d7ce5f47
+
+    responses:
+      "200":
+        description: "Password changed (always returns '{success: true}')"
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+
+/vendor/token:
+  post:
+    operationId: vendorLogin
+    summary: Login
+    description: Validate the user and then set the cookie. Return basic vendor data.
+    tags: [Vendor]
+    requestBody:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                description: Email for account.
+                example: "john@inletsites.dev"
+              password:
+                type: string
+                description: Password for account.
+                example: Password123
+    responses:
+      "200":
+        description: "Auth cookie set."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Vendor"

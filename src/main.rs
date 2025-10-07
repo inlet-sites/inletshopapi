@@ -15,6 +15,7 @@ async fn main() {
     HttpServer::new (move || {
         App::new()
             .app_data(web::Data::new(db.clone()))
+            .configure(routes::other::config)
             .configure(routes::user::config)
     })
         .bind(("0.0.0.0", 8001))?

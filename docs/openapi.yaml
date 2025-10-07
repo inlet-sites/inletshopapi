@@ -1,0 +1,23 @@
+openapi: 3.0.4
+info:
+  title: Inlet Shop API
+  version: 1.0.0
+  description: API for Inlet.Shop.
+
+servers:
+  - url: https://api.inlet.shop
+    description: Production server
+  - url: http://127.0.0.1:8001
+    description: Development server
+
+tags:
+  - name: Vendor
+    description: Operation related to vendors
+
+paths:
+  $ref: "./paths/vendor.yaml"
+
+components:
+  schemas:
+    Vendor:
+      $ref: "./components/vendor.yaml"

@@ -1,0 +1,143 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Unique ID of the vendor.
+    example: 651f7b7e2c8b5e0a1c45d9b3
+  email:
+    type: string
+    description: Email address for owner. Not public facing.
+    example: owner@inletsites.dev
+  owner:
+    type: string
+    description: Name of the owner of the business.
+    example: John Q. Owner
+  store:
+    type: string
+    description: Name of the business.
+    example: Inlet Sites
+  url:
+    type: string
+    description: URL to be used for the business on site. For example, 'example-store' is available at https://inlet.shop/example-store.
+    example: "inlet-sites"
+  publicData:
+    type: object
+    description: All of the public facing data for the vendor to display on their home page.
+    properties:
+      phone:
+        type: string
+        description: Public phone number for the business
+        example: 843-555-1234
+      email:
+        type: string
+        description: Public email address for the business
+        example: john.owner@inletsites.dev
+      address:
+        type: object
+        properties:
+          text:
+            type: string
+            description: Text displayed to the user representing the business address.
+            example: 1600 Pennsylvania Avenue, Washington, D.C.
+          link:
+            type: string
+            description: Any link for the address, such as Google Maps link.
+            example: https://www.google.com/maps/place/1600+Pennsylvania+Ave+NW,+Washington,+DC+20500/@38.8961358,-77.0366256,740m/data=!3m1!1e3!4m6!3m5!1s0x89b7b762e9178029:0x86be54e6c6e4a38a!8m2!3d38.8964495!4d-77.036501!16s%2Fg%2F11ldrc5b32?entry=ttu&g_ep=EgoyMDI1MTAwNC4wIKXMDSoASAFQAw%3D%3D
+      slogan:
+        type: string
+        description: Short text for business slogan. Just a few words.
+        example: Best in the Business!
+      description:
+        type: string
+        description: Long form description of the business.
+        example: We are the best in the business. Serving all your business needs while conducting business in the business area.
+      image:
+        type: string
+        description: URL of the main image for the business, such as the logo or an image of the storefront.
+        example: /image/651f7b7e2c8b5e0a1c45d9b3
+      hours:
+        type: object
+        description: Each day of the week as an array containing two strings, open time and close time. 24-hour HH:mm format.
+        properties:
+          sunday:
+            type: array
+            nullable: true
+            items:
+              type: string
+            minItems: 2
+            maxItems: 2
+            example: null
+          monday:
+            type: array
+            nullable: true
+            items:
+              type: string
+            minItems: 2
+            maxItems: 2
+            example: ["09:00", "17:00"]
+          tuesday:
+            type: array
+            nullable: true
+            items:
+              type: string
+            minItems: 2
+            maxitems: 2
+            example: ["09:00", "17:00"]
+          wednesday:
+            type: array
+            nullable: true
+            items:
+              type: string
+            minItems: 2
+            maxItems: 2
+            example: ["09:00", "17:00"]
+          thursday:
+            type: array
+            nullable: true
+            items:
+              type: string
+            minItems: 2
+            maxItems: 2
+            example: ["09:00", "17:00"]
+          friday:
+            type: array
+            nullable: true
+            items:
+              type: string
+            minItems: 2
+            maxItems: 2
+            example: ["10:00", "13:00"]
+          saturday:
+            type: array
+            nullable: true
+            items:
+              type: string
+            minItems: 2
+            maxItems: 2
+            example: null
+      links:
+        description: A list of url/text for any links that a business might want to share. Facebook, for example.
+        type: array
+        items:
+          type: object
+          properties:
+            url:
+              type: string
+              description: URL for the link
+              example: https://facebook.com/inlet-sites
+            text:
+              type: string
+              description: Text to display for the link
+              example: Facebook
+      website:
+        type: string
+        description: URL to website of the business
+        example: https://inletsites.dev
+  html: 
+    type: string
+    description: An HTML page to display on the vendors "About" page. This is for a custom page instead of the default.
+    example: <div>Custom HTML</div>
+  newOrderSendEmail:
+    type: boolean
+    description: If true, an email will be sent to the owner for every new order.
+    example: true
