@@ -1,7 +1,7 @@
 /vendor/{vendorId}/password/{token}:
   put:
     operationId: vendorCreatePassword
-    summary: Create password TODO
+    summary: Create password (TODO)
     description: Allows a new user to create their password in order to grant them access.
     tags: [Vendor]
     parameters:
@@ -55,7 +55,9 @@
 /vendor/{vendorId}/password:
   put:
     operationId: vendorChangePassword
-    summary: TODO Change password
+    summary: Change password (TODO)
+    security:
+      - VendorAuth: []
     description: Change the user password
     tags: [Vendor]
     parameters:
@@ -81,8 +83,8 @@
 /vendor/token:
   post:
     operationId: vendorLogin
-    summary: Login
-    description: Validate the user and then set the cookie. Return basic vendor data.
+    summary: Login (TODO)
+    description: Validate the vendor and then set the cookie. Return basic vendor data.
     tags: [Vendor]
     requestBody:
       content:
@@ -101,6 +103,50 @@
     responses:
       "200":
         description: "Auth cookie set."
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Vendor"
+
+/vendor/self:
+  get:
+    operationId: vendorGetSelf
+    summary: Get Vendor (self) (TODO)
+    security:
+      - VendorAuth: []
+    description: Retrieve the data for the vendor. All of the data for the actual vendor to see, including private information.
+    tags: [Vendor]
+    responses:
+      "200":
+        description: Successfully found and retrieved vendor's data.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Vendor"
+
+/vendor/{vendorUrl}:
+  get:
+    operationId: vendorGetFromUrl
+    summary: Get Vendor
+    description: Retrieve public vendor information with their URL.
+    tags: [Vendor]
+    responses:
+      "200":
+        description: Successfully found and retrieved vendor's data.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Vendor"
+
+/vendor:
+  get:
+    operationId: vendorGetAll
+    summary: Get Vendors
+    description: Retrieve a list of all vendors
+    tags: [Vendor]
+    responses:
+      "200":
+        description: Successfully retrieved list of all vendors
         content:
           application/json:
             schema:

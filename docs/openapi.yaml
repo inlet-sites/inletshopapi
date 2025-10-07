@@ -21,3 +21,5 @@ components:
   schemas:
     Vendor:
       $ref: "./components/vendor.yaml"
+  securitySchemes:
+    $ref: "./components/security.yaml"

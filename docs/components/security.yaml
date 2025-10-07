@@ -1,0 +1,4 @@
+VendorAuth:
+  type: apiKey
+  in: cookie
+  name: vendor
