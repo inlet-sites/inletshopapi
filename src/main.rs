@@ -2,6 +2,7 @@ use actix_web::{HttpServer, web};
 use mongodb::{Client, Database};
 
 mod routes;
+mod auth;
 
 #[actix_web::main]
 async fn main() {
