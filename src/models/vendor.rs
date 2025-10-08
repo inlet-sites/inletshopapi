@@ -1,6 +1,6 @@
 use serde::{Serialize, Deserialize};
 use mongodb::{
-    bson::{oid::ObjectId, DateTime, doc},
+    bson::{oid::ObjectId, DateTime, Document, doc},
     Collection
 };
 
@@ -8,7 +8,7 @@ use crate::app_error::AppError;
 
 #[derive(Serialize, Deserialize)]
 pub struct Vendor {
-    pub id: ObjectId,
+    pub _id: ObjectId,
     pub email: String,
     pub owner: String,
     pub store: String,
@@ -37,7 +37,7 @@ pub struct PublicData {
 }
 
 #[derive(Serialize, Deserialize)]
-struct StripeData {
+pub struct StripeData {
     account_id: String,
     activated: bool
 }
@@ -60,11 +60,18 @@ struct Link {
 }
 
 impl Vendor {
-    pub async fn find_by_id(coll: &Collection<Vendor>, user_id: ObjectId) -> Result<Vendor, AppError> {
-        match coll.find_one(doc!{"_id": user_id}).await {
+    pub async fn find_by_id(coll: &Collection<Vendor>, vendor_id: ObjectId) -> Result<Vendor, AppError> {
+        match coll.find_one(doc!{"_id": vendor_id}).await {
             Ok(Some(v)) => Ok(v),
-            Ok(None) => Err(AppError::invalid_input("No Vendor with that ID")),
+            Ok(None) => Err(AppError::not_found("Vendor with this ID not found")),
             Err(e) => Err(AppError::Database(e.into()))
+        }
+    }
+
+    pub async fn update(self, coll: &Collection<Vendor>, data: Document) -> Result<Vendor, AppError> {
+        match coll.find_one_and_update(doc!{"_id": self._id}, doc!{"$set": data}).await? {
+            Some(v) => Ok(v),
+            None => Err(AppError::not_found("User with this ID does not exist"))
         }
     }
 }

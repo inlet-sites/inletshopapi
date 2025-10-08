@@ -1,7 +1,7 @@
 use serde::Deserialize;
 
 #[derive(Deserialize)]
-pub struct LoginInput {
-    email: String,
-    password: String
+pub struct CreatePasswordInput {
+    pub password: String,
+    pub confirm_password: String
 }

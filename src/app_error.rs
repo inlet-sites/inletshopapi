@@ -21,11 +21,17 @@ pub enum AppError {
     #[error("{0}")]
     InvalidInput(String),
 
-    #[error("{0}")]
-    Database(#[from] mongodb::error::Error),
-
     #[error("Unauthorized")]
-    Auth
+    Auth,
+
+    #[error("{0}")]
+    NotFound(String),
+
+    #[error("{0}")]
+    Forbidden(String),
+
+    #[error("Internal Server Error")]
+    Database(#[from] mongodb::error::Error)
 }
 
 impl ResponseError for AppError {
@@ -33,8 +39,10 @@ impl ResponseError for AppError {
         match self {
             AppError::InternalError => StatusCode::INTERNAL_SERVER_ERROR,
             AppError::InvalidInput(_) => StatusCode::BAD_REQUEST,
-            AppError::Database(_) => StatusCode::INTERNAL_SERVER_ERROR,
-            AppError::Auth => StatusCode::UNAUTHORIZED
+            AppError::Auth => StatusCode::UNAUTHORIZED,
+            AppError::NotFound(_) => StatusCode::NOT_FOUND,
+            AppError::Forbidden(_) => StatusCode::FORBIDDEN,
+            AppError::Database(_) => StatusCode::INTERNAL_SERVER_ERROR
         }
     }
 
@@ -53,5 +61,13 @@ impl ResponseError for AppError {
 impl AppError {
     pub fn invalid_input(msg: &str) -> Self {
         AppError::InvalidInput(msg.to_owned())
+    }
+
+    pub fn not_found(msg: &str) -> Self {
+        AppError::NotFound(msg.to_owned())
+    }
+
+    pub fn forbidden(msg: &str) -> Self {
+        AppError::Forbidden(msg.to_owned())
     }
 }

@@ -16,7 +16,7 @@ async fn main() -> std::io::Result<()> {
     } else {
         "mongodb://127.0.0.1:27017".to_string()
     };
-    let db = connect_db(&uri, "suma").await;
+    let db = connect_db(&uri, "inletshop").await;
 
     HttpServer::new (move || {
         App::new()

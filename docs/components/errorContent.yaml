@@ -1,0 +1,47 @@
+Response400:
+  application/json:
+    schema:
+      type: object
+      properties:
+        code:
+          type: number
+          example: 400
+        message:
+          type: string
+          example: User entered incorrect data
+
+Response401:
+  application/json:
+    schema:
+      type: object
+      properties:
+        code:
+          type: number
+          example: 401
+        message:
+          type: string
+          example: Unauthorized user
+
+Response404:
+  application/json:
+    schema:
+      type: object
+      properties:
+        code:
+          type: number
+          example: 404
+        message:
+          type: string
+          example: Vendor with that ID does not exist
+
+Response500:
+  application/json:
+    schema:
+      type: object
+      properties:
+        code:
+          type: number
+          example: 500
+        message:
+          type: string
+          example: Internal server error

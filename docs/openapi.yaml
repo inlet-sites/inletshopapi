@@ -12,7 +12,7 @@ servers:
 
 tags:
   - name: Vendor
-    description: Operation related to vendors
+    description: Operations related to vendors
 
 paths:
   $ref: "./paths/vendor.yaml"
@@ -23,3 +23,5 @@ components:
       $ref: "./components/vendor.yaml"
   securitySchemes:
     $ref: "./components/security.yaml"
+  errorContent:
+    $ref: "./components/errorContent.yaml"

@@ -1,11 +1,11 @@
-/vendor/{vendorId}/password/{token}:
+/vendor/{vendor_id}/password/{token}:
   put:
     operationId: vendorCreatePassword
-    summary: Create password (TODO)
+    summary: Create password
     description: Allows a new user to create their password in order to grant them access.
     tags: [Vendor]
     parameters:
-      - name: vendorId
+      - name: vendor-id
         in: path
         required: true
         description: Vendor ID (ObjectId)
@@ -51,6 +51,22 @@
               properties:
                 success:
                   type: boolean
+      "400":
+        description: "Bad request"
+        content:
+          $ref: "#/components/errorContent/Response400"
+      "401":
+        description: "Invalid authorization"
+        content:
+          $ref: "#/components/errorContent/Response401"
+      "404":
+        description: "Vendor not found"
+        content:
+          $ref: "#/components/errorContent/Response404"
+      "500":
+        description: "Internal server error"
+        content:
+          $ref: "#/components/errorContent/Response500"
 
 /vendor/{vendorId}/password:
   put:
