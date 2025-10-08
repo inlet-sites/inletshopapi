@@ -1,5 +1,5 @@
 use actix_web::web;
-use crate::controllers::user::{
+use crate::controllers::vendor::{
     login_route
 };
 

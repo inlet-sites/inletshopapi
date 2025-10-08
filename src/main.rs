@@ -1,11 +1,16 @@
-use actix_web::{HttpServer, web};
+use actix_web::{HttpServer, web, App};
 use mongodb::{Client, Database};
 
 mod routes;
+mod models;
+mod controllers;
+mod dto;
+mod app_error;
 mod auth;
 
 #[actix_web::main]
-async fn main() {
+async fn main() -> std::io::Result<()> {
+    let node_env = std::env::var("NODE_ENV").unwrap_or_else(|_| "development".to_string());
     let uri = if node_env == "production" {
         std::env::var("MONGO_URI").expect("MONGO_URI must be set in production")
     } else {
@@ -16,8 +21,7 @@ async fn main() {
     HttpServer::new (move || {
         App::new()
             .app_data(web::Data::new(db.clone()))
-            .configure(routes::other::config)
-            .configure(routes::user::config)
+            .configure(routes::vendor::config)
     })
         .bind(("0.0.0.0", 8001))?
         .run()

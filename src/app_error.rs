@@ -1,5 +1,6 @@
-use actix_web::{http::StatusCode, HttpResponse};
+use actix_web::{HttpResponse, ResponseError, http::StatusCode};
 use thiserror::Error;
+use serde::Serialize;
 
 #[derive(Serialize)]
 struct ErrorBody {
@@ -12,16 +13,28 @@ struct ErrorInfo {
     message: String
 }
 
-#[derive(Error)]
+#[derive(Debug, Error)]
 pub enum AppError {
     #[error("Internal Server Error")]
-    InternalError
+    InternalError,
+
+    #[error("{0}")]
+    InvalidInput(String),
+
+    #[error("{0}")]
+    Database(#[from] mongodb::error::Error),
+
+    #[error("Unauthorized")]
+    Auth
 }
 
 impl ResponseError for AppError {
     fn status_code(&self) -> StatusCode {
         match self {
-            AppError::InternalError => StatusCode::INTERNAL_SERVER_ERROR
+            AppError::InternalError => StatusCode::INTERNAL_SERVER_ERROR,
+            AppError::InvalidInput(_) => StatusCode::BAD_REQUEST,
+            AppError::Database(_) => StatusCode::INTERNAL_SERVER_ERROR,
+            AppError::Auth => StatusCode::UNAUTHORIZED
         }
     }
 
@@ -33,6 +46,12 @@ impl ResponseError for AppError {
             }
         };
 
-        HttpResponse::build(self.status_code().json(body))
+        HttpResponse::build(self.status_code()).json(body)
+    }
+}
+
+impl AppError {
+    pub fn invalid_input(msg: &str) -> Self {
+        AppError::InvalidInput(msg.to_owned())
     }
 }
