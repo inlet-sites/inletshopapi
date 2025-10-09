@@ -28,15 +28,30 @@ pub async fn create_password_route(
         .map_err(|_| AppError::InternalError)?;
     let vendor_coll = db.collection::<Vendor>("vendors");
     let vendor = Vendor::find_by_id(&vendor_coll, v_id).await?;
+
+    let update_data = handle_create_password(vendor, body)?;
+
+    vendor.update(&vendor_coll, update_data).await?;
+    Ok(HttpResponse::Ok().json(json!({"success": true})))
+}
+
+fn handle_create_password(
+    vendor: Vendor,
+    input: CreatePasswordInput,
+    token: String
+) -> Result<(), AppError> {
     if vendor.pass_hash.is_some() {
         return Err(AppError::forbidden("Vendor password already created"));
     }
+
     valid_token(&vendor, &token)?;
     valid_password(&body.password, &body.confirm_password)?;
     let pass_hash = Some(hash_password(&body.password)?);
-    let new_token = Uuid::new_v4().to_string();
-    vendor.update(&vendor_coll, doc!{"pass_hash": pass_hash, "token": new_token}).await?;
-    Ok(HttpResponse::Ok().json(json!({"success": true})))
+    
+    return doc!{
+        "pass_hash": pass_hash,
+        "token": Uuid::new_v4().to_string()
+    };
 }
 
 fn valid_token(vendor: &Vendor, token: &String) -> Result<(), AppError> {

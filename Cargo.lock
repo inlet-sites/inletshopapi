@@ -3,19 +3,6 @@
 version = 4
 
 [[package]]
-name = "InletShopAPI"
-version = "0.1.0"
-dependencies = [
- "actix-web",
- "argon2",
- "mongodb",
- "serde",
- "serde_json",
- "thiserror 2.0.17",
- "uuid",
-]
-
-[[package]]
 name = "actix-codec"
 version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1138,6 +1125,19 @@ dependencies = [
  "hashbrown 0.16.0",
  "serde",
  "serde_core",
+]
+
+[[package]]
+name = "inlet_shop_api"
+version = "0.1.0"
+dependencies = [
+ "actix-web",
+ "argon2",
+ "mongodb",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.17",
+ "uuid",
 ]
 
 [[package]]

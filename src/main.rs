@@ -16,7 +16,7 @@ async fn main() -> std::io::Result<()> {
     } else {
         "mongodb://127.0.0.1:27017".to_string()
     };
-    let db = connect_db(&uri, "inletshop").await;
+    let db = connect_db(&uri, database_name()).await;
 
     HttpServer::new (move || {
         App::new()
@@ -29,7 +29,19 @@ async fn main() -> std::io::Result<()> {
         .await
 }
 
-pub async fn connect_db(uri: &str, db_name: &str) -> Database {
+async fn connect_db(uri: &str, db_name: &str) -> Database {
     let client = Client::with_uri_str(uri).await.expect("Failed to connect to database");
     client.database(db_name)
+}
+
+fn database_name() -> &'static str {
+    #[cfg(test)]
+    {
+        "test"
+    }
+
+    #[cfg(not(test))]
+    {
+        "inletshop"
+    }
 }
