@@ -34,14 +34,13 @@ pub async fn route(
     let (vendor_id, token) = path.into_inner();
     let v_id = ObjectId::parse_str(vendor_id)
         .map_err(|_| AppError::InternalError)?;
-    let vendor_coll = db.collection::<Vendor>("vendors");
-    let vendor = Vendor::find_by_id(&vendor_coll, v_id).await?;
+    let vendor = Vendor::find_by_id(&db, v_id).await?;
 
     //Logic
     let update_data = handle_create_password(&vendor, body.into_inner(), token)?;
 
     //Update and respond
-    vendor.update(&vendor_coll, update_data).await?;
+    vendor.update(&db, update_data).await?;
     Ok(HttpResponse::Ok().json(json!({"success": true})))
 }
 

@@ -12,10 +12,9 @@ pub async fn vendor_auth(
     let user_id = cookie.value();
     let object_id = ObjectId::parse_str(user_id)
         .map_err(|_| AppError::InternalError)?;
-    let vendor_coll = db.collection::<Vendor>("vendors");
-    let vendor = Vendor::find_by_id(&vendor_coll, object_id).await?;
+    let vendor = Vendor::find_by_id(&db, object_id).await?;
     if vendor.pass_hash.is_none() {
         return Err(AppError::forbidden("Vendor password not set"));
     }
-    Ok(Vendor::find_by_id(&vendor_coll, object_id).await?)
+    Ok(vendor)
 }
