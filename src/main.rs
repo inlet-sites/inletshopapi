@@ -4,7 +4,6 @@ use mongodb::{Client, Database};
 mod routes;
 mod models;
 mod controllers;
-mod dto;
 mod app_error;
 mod auth;
 #[cfg(test)]

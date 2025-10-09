@@ -1,5 +1,6 @@
 use actix_web::{HttpResponse, put, web};
 use uuid::Uuid;
+use serde::Deserialize;
 use serde_json::json;
 use mongodb::{
     bson::{oid::ObjectId, Document, doc},
@@ -14,15 +15,20 @@ use argon2::{
 };
 use crate::{
     models::vendor::Vendor,
-    app_error::AppError,
-    dto::vendor::CreatePasswordInput
+    app_error::AppError
 };
+
+#[derive(Deserialize)]
+pub struct Body {
+    pub password: String,
+    pub confirm_password: String
+}
 
 #[put("/vendor/{vendor_id}/password/{token}")]
 pub async fn route(
     db: web::Data<Database>,
     path: web::Path<(String, String)>,
-    body: web::Json<CreatePasswordInput>
+    body: web::Json<Body>
 ) -> Result<HttpResponse, AppError> {
     //Gather data
     let (vendor_id, token) = path.into_inner();
@@ -41,7 +47,7 @@ pub async fn route(
 
 pub fn handle_create_password(
     vendor: &Vendor,
-    input: CreatePasswordInput,
+    input: Body,
     token: String
 ) -> Result<Document, AppError> {
     if vendor.pass_hash.is_some() {

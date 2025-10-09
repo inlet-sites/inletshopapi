@@ -2,7 +2,6 @@ use uuid::Uuid;
 use crate::{
     controllers::vendor::create_password,
     tests::vendor::common::create_vendor,
-    dto::vendor::CreatePasswordInput,
     app_error::AppError
 };
 
@@ -10,7 +9,7 @@ use crate::{
 fn rejects_mismatched_passwords() {
     let t = Uuid::new_v4().to_string();
     let v = create_vendor(false, Some(t.clone()));
-    let i = CreatePasswordInput {
+    let i = create_password::Body {
         password: "password123".to_string(),
         confirm_password: "password124".to_string()
     };
@@ -23,7 +22,7 @@ fn rejects_mismatched_passwords() {
 fn rejects_short_password() {
     let t = Uuid::new_v4().to_string();
     let v = create_vendor(false, Some(t.clone()));
-    let i = CreatePasswordInput {
+    let i = create_password::Body {
         password: String::from("password"),
         confirm_password: String::from("password")
     };
@@ -35,7 +34,7 @@ fn rejects_short_password() {
 #[test]
 fn rejects_invalid_token() {
     let v = create_vendor(false, None);
-    let i = CreatePasswordInput {
+    let i = create_password::Body {
         password: String::from("password123"),
         confirm_password: String::from("password123")
     };
@@ -48,7 +47,7 @@ fn rejects_invalid_token() {
 fn rejects_password_exists() {
     let t = Uuid::new_v4().to_string();
     let v = create_vendor(true, Some(t.clone()));
-    let i = CreatePasswordInput {
+    let i = create_password::Body {
         password: String::from("password123"),
         confirm_password: String::from("password123")
     };
@@ -62,7 +61,7 @@ fn returns_valid_document() {
     let t = Uuid::new_v4().to_string();
     let p = String::from("password123");
     let v = create_vendor(false, Some(t.clone()));
-    let i = CreatePasswordInput {
+    let i = create_password::Body {
         password: p.clone(),
         confirm_password: p.clone()
     };
