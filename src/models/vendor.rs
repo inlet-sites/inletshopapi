@@ -25,15 +25,15 @@ pub struct Vendor {
 
 #[derive(Serialize, Deserialize)]
 pub struct PublicData {
-    phone: Option<String>,
-    email: Option<String>,
-    address: Option<String>,
-    slogan: Option<String>,
-    description: Option<String>,
-    image: Option<String>,
-    hours: Option<BusinessHours>,
-    links: Option<Vec<Link>>,
-    website: Option<String>
+    pub phone: Option<String>,
+    pub email: Option<String>,
+    pub address: Option<String>,
+    pub slogan: Option<String>,
+    pub description: Option<String>,
+    pub image: Option<String>,
+    pub hours: Option<BusinessHours>,
+    pub links: Option<Vec<Link>>,
+    pub website: Option<String>
 }
 
 #[derive(Serialize, Deserialize)]
@@ -43,7 +43,7 @@ pub struct StripeData {
 }
 
 #[derive(Serialize, Deserialize)]
-struct BusinessHours {
+pub struct BusinessHours {
     sunday: Option<Vec<String>>,
     monday: Option<Vec<String>>,
     tuesday: Option<Vec<String>>,
@@ -54,7 +54,7 @@ struct BusinessHours {
 }
 
 #[derive(Serialize, Deserialize)]
-struct Link {
+pub struct Link {
     url: String,
     text: String
 }

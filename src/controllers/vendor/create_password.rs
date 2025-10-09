@@ -2,7 +2,7 @@ use actix_web::{HttpResponse, put, web};
 use uuid::Uuid;
 use serde_json::json;
 use mongodb::{
-    bson::{oid::ObjectId, doc},
+    bson::{oid::ObjectId, Document, doc},
     Database
 };
 use argon2::{
@@ -12,46 +12,50 @@ use argon2::{
     },
     Argon2
 };
-
-use crate::models::vendor::Vendor;
-use crate::app_error::AppError;
-use crate::dto::vendor::CreatePasswordInput;
+use crate::{
+    models::vendor::Vendor,
+    app_error::AppError,
+    dto::vendor::CreatePasswordInput
+};
 
 #[put("/vendor/{vendor_id}/password/{token}")]
-pub async fn create_password_route(
+pub async fn route(
     db: web::Data<Database>,
     path: web::Path<(String, String)>,
     body: web::Json<CreatePasswordInput>
 ) -> Result<HttpResponse, AppError> {
+    //Gather data
     let (vendor_id, token) = path.into_inner();
     let v_id = ObjectId::parse_str(vendor_id)
         .map_err(|_| AppError::InternalError)?;
     let vendor_coll = db.collection::<Vendor>("vendors");
     let vendor = Vendor::find_by_id(&vendor_coll, v_id).await?;
 
-    let update_data = handle_create_password(vendor, body)?;
+    //Logic
+    let update_data = handle_create_password(&vendor, body.into_inner(), token)?;
 
+    //Update and respond
     vendor.update(&vendor_coll, update_data).await?;
     Ok(HttpResponse::Ok().json(json!({"success": true})))
 }
 
-fn handle_create_password(
-    vendor: Vendor,
+pub fn handle_create_password(
+    vendor: &Vendor,
     input: CreatePasswordInput,
     token: String
-) -> Result<(), AppError> {
+) -> Result<Document, AppError> {
     if vendor.pass_hash.is_some() {
         return Err(AppError::forbidden("Vendor password already created"));
     }
 
     valid_token(&vendor, &token)?;
-    valid_password(&body.password, &body.confirm_password)?;
-    let pass_hash = Some(hash_password(&body.password)?);
+    valid_password(&input.password, &input.confirm_password)?;
+    let pass_hash = Some(hash_password(&input.password)?);
     
-    return doc!{
+    Ok(doc!{
         "pass_hash": pass_hash,
         "token": Uuid::new_v4().to_string()
-    };
+    })
 }
 
 fn valid_token(vendor: &Vendor, token: &String) -> Result<(), AppError> {
