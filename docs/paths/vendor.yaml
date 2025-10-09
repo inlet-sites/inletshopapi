@@ -68,7 +68,7 @@
         content:
           $ref: "#/components/errorContent/Response500"
 
-/vendor/{vendorId}/password:
+/vendor/{vendor_id}/password:
   put:
     operationId: vendorChangePassword
     summary: Change password (TODO)
@@ -84,7 +84,24 @@
         schema:
           type: string
           example: 68e437e1f2235a39d7ce5f47
-
+    requestBody:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              current_password:
+                type: string
+                description: Current password of the vendor
+                example: mycurrentpassword
+              new_password:
+                type: string
+                description: New password for vendor
+                example: mynewpassword
+              confirm_password:
+                type: string
+                description: Confirmation password
+                example: mynewpassword
     responses:
       "200":
         description: "Password changed (always returns '{success: true}')"
