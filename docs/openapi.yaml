@@ -3,6 +3,9 @@ info:
   title: Inlet Shop API
   version: 1.0.0
   description: API for Inlet.Shop.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
 
 servers:
   - url: https://api.inlet.shop
@@ -18,21 +21,5 @@ paths:
   $ref: "./paths/vendor.yaml"
 
 components:
-  schemas:
-    Vendor:
-      $ref: "./components/vendor.yaml"
-    PublicData:
-      $ref: "./components/publicData.yaml"
   securitySchemes:
     $ref: "./components/security.yaml"
-  responses:
-    "400":
-      $ref: "./components/responses/400.yaml"
-    "401":
-      $ref: "./components/responses/401.yaml"
-    "403":
-      $ref: "./components/responses/403.yaml"
-    "404":
-      $ref: "./components/responses/404.yaml"
-    "500":
-      $ref: "./components/responses/500.yaml"

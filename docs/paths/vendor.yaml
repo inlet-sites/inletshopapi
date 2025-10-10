@@ -2,6 +2,7 @@
   put:
     operationId: vendorCreatePassword
     summary: Create password
+    security: []
     description: Allows a new user to create their password in order to grant them access.
     tags: [Vendor]
     parameters:
@@ -68,14 +69,6 @@
       - VendorAuth: []
     description: Change the user password
     tags: [Vendor]
-    parameters:
-      - name: vendorId
-        in: path
-        required: true
-        description: Vendor ID (ObjectID)
-        schema:
-          type: string
-          example: 68e437e1f2235a39d7ce5f47
     requestBody:
       content:
         application/json:
@@ -119,6 +112,7 @@
   post:
     operationId: vendorLogin
     summary: Login
+    security: []
     description: Validate the vendor and then set the cookie. Return basic vendor data.
     tags: [Vendor]
     requestBody:
@@ -141,7 +135,7 @@
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Vendor"
+              $ref: "../components/schemas/vendor.yaml"
       "401":
         $ref: "../components/responses/401.yaml"
       "404":
@@ -163,7 +157,7 @@
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Vendor"
+              $ref: "../components/schemas/vendor.yaml"
       "401":
         $ref: "../components/responses/401.yaml"
       "403":
@@ -175,6 +169,7 @@
   get:
     operationId: vendorGetFromUrl
     summary: Get Vendor
+    security: []
     description: Retrieve public vendor information with their URL.
     tags: [Vendor]
     parameters:
@@ -183,7 +178,7 @@
         required: true
         description: Vendor unique URL
         schema:
-          type: String
+          type: string
           example: inlet-sites
     responses:
       "200":
@@ -205,7 +200,7 @@
                   type: string
                   description: URL to be used for the business on site. For exampl, 'example-store' is available at https://inlet.shop/example-store
                 public_data:
-                  $ref: "#/components/schemas/PublicData"
+                  $ref: "../components/schemas/publicData.yaml"
                 html:
                   type: string
                   description: An HTML page to display on the vendor's "About" page. This is for a custom page instead of the default.
@@ -219,6 +214,7 @@
   get:
     operationId: vendorGetAll
     summary: Get Vendors
+    security: []
     description: Retrieve a list of all vendors
     tags: [Vendor]
     responses:
@@ -227,4 +223,6 @@
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Vendor"
+              $ref: "../components/schemas/vendor.yaml"
+      "400":
+        $ref: "../components/responses/400.yaml"

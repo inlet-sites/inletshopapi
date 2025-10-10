@@ -58,7 +58,7 @@ properties:
         items:
           type: string
         minItems: 2
-        maxitems: 2
+        maxItems: 2
         example: ["09:00", "17:00"]
       wednesday:
         type: array
