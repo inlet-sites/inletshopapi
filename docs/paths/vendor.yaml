@@ -5,7 +5,7 @@
     description: Allows a new user to create their password in order to grant them access.
     tags: [Vendor]
     parameters:
-      - name: vendor-id
+      - name: vendor_id
         in: path
         required: true
         description: Vendor ID (ObjectId)
@@ -52,13 +52,13 @@
                 success:
                   type: boolean
       "400":
-        $ref: "#/components/responses/400"
+        $ref: "../components/responses/400.yaml"
       "401":
-        $ref: "#/components/responses/401"
+        $ref: "../components/responses/401.yaml"
       "404":
-        $ref: "#/components/responses/404"
+        $ref: "../components/responses/404.yaml"
       "500":
-        $ref: "#/components/responses/500"
+        $ref: "../components/responses/500.yaml"
 
 /vendor/password:
   put:
@@ -105,15 +105,15 @@
                 success:
                   type: boolean
       "400":
-        $ref: "#/components/responses/400"
+        $ref: "../components/responses/400.yaml"
       "401":
-        $ref: "#/components/responses/401"
+        $ref: "../components/responses/401.yaml"
       "403":
-        $ref: "#/components/responses/403"
+        $ref: "../components/responses/403.yaml"
       "404":
-        $ref: "#/components/responses/404"
+        $ref: "../components/responses/404.yaml"
       "500":
-        $ref: "#/components/responses/500"
+        $ref: "../components/responses/500.yaml"
 
 /vendor/login:
   post:
@@ -143,11 +143,11 @@
             schema:
               $ref: "#/components/schemas/Vendor"
       "401":
-        $ref: "#/components/responses/401"
+        $ref: "../components/responses/401.yaml"
       "404":
-        $ref: "#/components/responses/404"
+        $ref: "../components/responses/404.yaml"
       "500":
-        $ref: "#/components/responses/500"
+        $ref: "../components/responses/500.yaml"
 
 /vendor/self:
   get:
@@ -165,25 +165,55 @@
             schema:
               $ref: "#/components/schemas/Vendor"
       "401":
-        $ref: "#/components/responses/401"
+        $ref: "../components/responses/401.yaml"
       "403":
-        $ref: "#/components/responses/403"
+        $ref: "../components/responses/403.yaml"
       "500":
-        $ref: "#/components/responses/500"
+        $ref: "../components/responses/500.yaml"
 
-/vendor/{vendorUrl}:
+/vendor/{vendor_url}:
   get:
     operationId: vendorGetFromUrl
     summary: Get Vendor
     description: Retrieve public vendor information with their URL.
     tags: [Vendor]
+    parameters:
+      - name: vendor_url
+        in: path
+        required: true
+        description: Vendor unique URL
+        schema:
+          type: String
+          example: inlet-sites
     responses:
       "200":
         description: Successfully found and retrieved vendor's data.
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Vendor"
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: Unique ID of the vendor
+                  example: 651f7b7e2c8b5e0a1c45d9b3
+                store:
+                  type: string
+                  description: name of the business
+                  example: Inlet Sites
+                url:
+                  type: string
+                  description: URL to be used for the business on site. For exampl, 'example-store' is available at https://inlet.shop/example-store
+                public_data:
+                  $ref: "#/components/schemas/PublicData"
+                html:
+                  type: string
+                  description: An HTML page to display on the vendor's "About" page. This is for a custom page instead of the default.
+                  example: <div>Custom HTML</div>
+      "404":
+        $ref: "../components/responses/404.yaml"
+      "500":
+        $ref: "../components/responses/500.yaml"
 
 /vendor:
   get:

@@ -1,0 +1,12 @@
+description: Not Found
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        code:
+          type: number
+          example: 404
+        message:
+          type: string
+          example: Vendor with that ID does not exist

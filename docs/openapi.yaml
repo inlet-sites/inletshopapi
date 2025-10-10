@@ -21,7 +21,18 @@ components:
   schemas:
     Vendor:
       $ref: "./components/vendor.yaml"
+    PublicData:
+      $ref: "./components/publicData.yaml"
   securitySchemes:
     $ref: "./components/security.yaml"
   responses:
-    $ref: "./components/errorContent.yaml"
+    "400":
+      $ref: "./components/responses/400.yaml"
+    "401":
+      $ref: "./components/responses/401.yaml"
+    "403":
+      $ref: "./components/responses/403.yaml"
+    "404":
+      $ref: "./components/responses/404.yaml"
+    "500":
+      $ref: "./components/responses/500.yaml"
