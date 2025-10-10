@@ -13,6 +13,8 @@ use crate::{
     app_error::AppError,
     auth::vendor_auth
 };
+#[cfg(test)]
+use mongodb::bson::Bson;
 
 #[derive(Deserialize)]
 pub struct Body {
@@ -44,5 +46,18 @@ pub async fn route(
 fn update_document(pass_hash: String) -> Document {
     doc!{
         "pass_hash": pass_hash
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    //update_document
+    #[test]
+    fn creates_valid_document() {
+        let result = update_document(String::from("some_hash"));
+
+        assert!(result.contains_key("pass_hash"));
     }
 }
