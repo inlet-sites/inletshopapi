@@ -160,6 +160,18 @@
           application/json:
             schema:
               $ref: "#/components/schemas/Vendor"
+      "401":
+        description: Unauthorized
+        content: 
+          $ref: "#/components/errorContent/Response401"
+      "404":
+        description: Not found
+        content:
+          $ref: "#/components/errorContent/Response404"
+      "500":
+        description: Internal server error
+        content:
+          $ref: "#/components/errorContent/Response500"
 
 /vendor/self:
   get:
