@@ -1,11 +1,17 @@
-use actix_web::{HttpResponse, web, put};
+use actix_web::{HttpResponse, HttpRequest, web, put};
 use mongodb::{
     Database,
-    bson::oid::ObjectId
+    bson::{
+        Document,
+        doc
+    }
 };
 use serde::Deserialize;
+use serde_json::json;
 use crate::{
-    app_error::AppError
+    controllers::vendor::common,
+    app_error::AppError,
+    auth::vendor_auth
 };
 
 #[derive(Deserialize)]
@@ -15,22 +21,28 @@ pub struct Body {
     pub confirm_password: String
 }
 
-#[put("/vendor/{vendor_id}/password")]
+#[put("/vendor/password")]
 pub async fn route(
     db: web::Data<Database>,
-    path: web::Path<String>,
-    body: web::Json<Body>
+    body: web::Json<Body>,
+    req: HttpRequest
 ) -> Result<HttpResponse, AppError> {
     //Gather data
-    let vendor_id = ObjectId::parse_str(path.into_inner())
-        .map_err(|_| AppError::InternalError)?;
-    //
-    //Confirm existing password
-    //Validate new password
-    //Hash password
-    //Create update document
-    //
+    let vendor = vendor_auth(&db, &req).await?;
+
+    //Logic
+    common::compare_password(&body.current_password, &vendor.pass_hash.as_ref().unwrap())?;
+    common::valid_password(&body.new_password, &body.confirm_password)?;
+    let pass_hash = common::hash_password(&body.new_password)?;
+    let update_doc = update_document(pass_hash);
+
     //Update Vendor
-    //Respond
-    Ok(HttpResponse::Ok().body("something"))
+    vendor.update(&db, update_doc).await?;
+    Ok(HttpResponse::Ok().json(json!({"success": true})))
+}
+
+fn update_document(pass_hash: String) -> Document {
+    doc!{
+        "pass_hash": pass_hash
+    }
 }

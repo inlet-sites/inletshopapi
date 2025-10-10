@@ -6,14 +6,8 @@ use mongodb::{
     bson::{oid::ObjectId, Document, doc},
     Database
 };
-use argon2::{
-    password_hash::{
-        rand_core::OsRng,
-        PasswordHasher, SaltString
-    },
-    Argon2
-};
 use crate::{
+    controllers::vendor::common,
     models::vendor::Vendor,
     app_error::AppError
 };
@@ -54,8 +48,8 @@ pub fn handle_create_password(
     }
 
     valid_token(&vendor, &token)?;
-    valid_password(&input.password, &input.confirm_password)?;
-    let pass_hash = Some(hash_password(&input.password)?);
+    common::valid_password(&input.password, &input.confirm_password)?;
+    let pass_hash = Some(common::hash_password(&input.password)?);
     
     Ok(doc!{
         "pass_hash": pass_hash,
@@ -70,23 +64,3 @@ fn valid_token(vendor: &Vendor, token: &String) -> Result<(), AppError> {
     Err(AppError::Auth)
 }
 
-fn valid_password(pass: &String, confirm_pass: &String) -> Result<(), AppError> {
-    if *pass != *confirm_pass {
-        return Err(AppError::invalid_input("Passwords do not match"));
-    }
-
-    if pass.chars().count() < 10 {
-        return Err(AppError::invalid_input("Password must contain at least 10 characters"));
-    }
-
-    Ok(())
-}
-
-fn hash_password(pass: &String) -> Result<String, AppError> {
-    let salt = SaltString::generate(&mut OsRng);
-    let argon2 = Argon2::default();
-    match argon2.hash_password(pass.as_bytes(), &salt) {
-        Ok(h) => Ok(h.to_string()),
-        Err(_) => Err(AppError::InternalError)
-    }
-}
