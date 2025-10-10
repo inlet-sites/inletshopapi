@@ -60,7 +60,7 @@ pub struct Link {
 }
 
 #[derive(Serialize)]
-struct ResponseVendor {
+pub struct ResponseVendor {
     id: String,
     email: String,
     owner: String,
@@ -80,7 +80,7 @@ impl Vendor {
         }
     }
 
-    pub async fn find_by_email(db: &Database, email: String) -> Result<Vendor, AppError> {
+    pub async fn find_by_email(db: &Database, email: &String) -> Result<Vendor, AppError> {
         match db.collection::<Vendor>("vendors").find_one(doc!{"email": email}).await {
             Ok(Some(v)) => Ok(v),
             Ok(None) => Err(AppError::not_found("Vendor with this email does not exist")),

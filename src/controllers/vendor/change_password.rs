@@ -13,8 +13,6 @@ use crate::{
     app_error::AppError,
     auth::vendor_auth
 };
-#[cfg(test)]
-use mongodb::bson::Bson;
 
 #[derive(Deserialize)]
 struct Body {
