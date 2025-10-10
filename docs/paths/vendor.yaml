@@ -133,10 +133,10 @@
         content:
           $ref: "#/components/errorContent/Response500"
 
-/vendor/token:
+/vendor/login:
   post:
     operationId: vendorLogin
-    summary: Login (TODO)
+    summary: Login
     description: Validate the vendor and then set the cookie. Return basic vendor data.
     tags: [Vendor]
     requestBody:

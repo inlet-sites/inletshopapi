@@ -59,6 +59,18 @@ pub struct Link {
     text: String
 }
 
+#[derive(Serialize)]
+struct ResponseVendor {
+    id: String,
+    email: String,
+    owner: String,
+    store: String,
+    url: String,
+    public_data: PublicData,
+    html: Option<String>,
+    new_order_send_email: bool
+}
+
 impl Vendor {
     pub async fn find_by_id(db: &Database, vendor_id: ObjectId) -> Result<Vendor, AppError> {
         match db.collection::<Vendor>("vendors").find_one(doc!{"_id": vendor_id}).await {
@@ -68,10 +80,31 @@ impl Vendor {
         }
     }
 
+    pub async fn find_by_email(db: &Database, email: String) -> Result<Vendor, AppError> {
+        match db.collection::<Vendor>("vendors").find_one(doc!{"email": email}).await {
+            Ok(Some(v)) => Ok(v),
+            Ok(None) => Err(AppError::not_found("Vendor with this email does not exist")),
+            Err(e) => Err(AppError::Database(e.into()))
+        }
+    }
+
     pub async fn update(self, db: &Database, data: Document) -> Result<Vendor, AppError> {
         match db.collection::<Vendor>("vendors").find_one_and_update(doc!{"_id": self._id}, doc!{"$set": data}).await? {
             Some(v) => Ok(v),
             None => Err(AppError::not_found("User with this ID does not exist"))
+        }
+    }
+
+    pub fn response(self) -> ResponseVendor {
+        ResponseVendor {
+            id: self._id.to_string(),
+            email: self.email,
+            owner: self.owner,
+            store: self.store,
+            url: self.url,
+            public_data: self.public_data,
+            html: self.html,
+            new_order_send_email: self.new_order_send_email
         }
     }
 }

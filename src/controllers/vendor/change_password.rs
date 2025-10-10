@@ -17,10 +17,10 @@ use crate::{
 use mongodb::bson::Bson;
 
 #[derive(Deserialize)]
-pub struct Body {
-    pub current_password: String,
-    pub new_password: String,
-    pub confirm_password: String
+struct Body {
+    current_password: String,
+    new_password: String,
+    confirm_password: String
 }
 
 #[put("/vendor/password")]
