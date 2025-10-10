@@ -23,5 +23,5 @@ components:
       $ref: "./components/vendor.yaml"
   securitySchemes:
     $ref: "./components/security.yaml"
-  errorContent:
+  responses:
     $ref: "./components/errorContent.yaml"

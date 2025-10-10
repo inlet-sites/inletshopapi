@@ -20,7 +20,7 @@ properties:
     type: string
     description: URL to be used for the business on site. For example, 'example-store' is available at https://inlet.shop/example-store.
     example: "inlet-sites"
-  publicData:
+  public_data:
     type: object
     description: All of the public facing data for the vendor to display on their home page.
     properties:
@@ -137,7 +137,7 @@ properties:
     type: string
     description: An HTML page to display on the vendors "About" page. This is for a custom page instead of the default.
     example: <div>Custom HTML</div>
-  newOrderSendEmail:
+  new_order_send_email:
     type: boolean
     description: If true, an email will be sent to the owner for every new order.
     example: true

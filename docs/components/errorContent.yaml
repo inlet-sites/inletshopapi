@@ -1,59 +1,69 @@
-Response400:
-  application/json:
-    schema:
-      type: object
-      properties:
-        code:
-          type: number
-          example: 400
-        message:
-          type: string
-          example: User entered incorrect data
+"400":
+  description: Bad Request
+  content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            code:
+              type: number
+              example: 400
+            message:
+              type: string
+              example: User entered incorrect data
 
-Response401:
-  application/json:
-    schema:
-      type: object
-      properties:
-        code:
-          type: number
-          example: 401
-        message:
-          type: string
-          example: Unauthorized user
+"401":
+  description: Unauthorized
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          code:
+            type: number
+            example: 401
+          message:
+            type: string
+            example: Unauthorized user
 
-Response403:
-  application/json:
-    schema:
-      type: object
-      properties:
-        code:
-          type: number
-          example: 403
-        message:
-          type: string
-          example: Unauthorized access
+"403":
+  description: Forbidden
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          code:
+            type: number
+            example: 403
+          message:
+            type: string
+            example: Unauthorized access
 
-Response404:
-  application/json:
-    schema:
-      type: object
-      properties:
-        code:
-          type: number
-          example: 404
-        message:
-          type: string
-          example: Vendor with that ID does not exist
+"404":
+  description: Not Found
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          code:
+            type: number
+            example: 404
+          message:
+            type: string
+            example: Vendor with that ID does not exist
 
-Response500:
-  application/json:
-    schema:
-      type: object
-      properties:
-        code:
-          type: number
-          example: 500
-        message:
-          type: string
-          example: Internal server error
+"500":
+  description: Internal Server Error
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          code:
+            type: number
+            example: 500
+          message:
+            type: string
+            example: Internal server error

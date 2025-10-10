@@ -52,21 +52,13 @@
                 success:
                   type: boolean
       "400":
-        description: "Bad request"
-        content:
-          $ref: "#/components/errorContent/Response400"
+        $ref: "#/components/responses/400"
       "401":
-        description: "Invalid authorization"
-        content:
-          $ref: "#/components/errorContent/Response401"
+        $ref: "#/components/responses/401"
       "404":
-        description: "Vendor not found"
-        content:
-          $ref: "#/components/errorContent/Response404"
+        $ref: "#/components/responses/404"
       "500":
-        description: "Internal server error"
-        content:
-          $ref: "#/components/errorContent/Response500"
+        $ref: "#/components/responses/500"
 
 /vendor/password:
   put:
@@ -113,25 +105,15 @@
                 success:
                   type: boolean
       "400":
-        description: Bad request
-        content:
-          $ref: "#/components/errorContent/Response400"
+        $ref: "#/components/responses/400"
       "401":
-        description: Unauthorized
-        content:
-          $ref: "#/components/errorContent/Response401"
+        $ref: "#/components/responses/401"
       "403":
-        description: Forbidden
-        content:
-          $ref: "#/components/errorContent/Response403"
+        $ref: "#/components/responses/403"
       "404":
-        description: Not found
-        content:
-          $ref: "#/components/errorContent/Response404"
+        $ref: "#/components/responses/404"
       "500":
-        description: Internal server error
-        content:
-          $ref: "#/components/errorContent/Response500"
+        $ref: "#/components/responses/500"
 
 /vendor/login:
   post:
@@ -161,22 +143,16 @@
             schema:
               $ref: "#/components/schemas/Vendor"
       "401":
-        description: Unauthorized
-        content: 
-          $ref: "#/components/errorContent/Response401"
+        $ref: "#/components/responses/401"
       "404":
-        description: Not found
-        content:
-          $ref: "#/components/errorContent/Response404"
+        $ref: "#/components/responses/404"
       "500":
-        description: Internal server error
-        content:
-          $ref: "#/components/errorContent/Response500"
+        $ref: "#/components/responses/500"
 
 /vendor/self:
   get:
     operationId: vendorGetSelf
-    summary: Get Vendor (self) (TODO)
+    summary: Get Vendor (self)
     security:
       - VendorAuth: []
     description: Retrieve the data for the vendor. All of the data for the actual vendor to see, including private information.
@@ -188,6 +164,12 @@
           application/json:
             schema:
               $ref: "#/components/schemas/Vendor"
+      "401":
+        $ref: "#/components/responses/401"
+      "403":
+        $ref: "#/components/responses/403"
+      "500":
+        $ref: "#/components/responses/500"
 
 /vendor/{vendorUrl}:
   get:
