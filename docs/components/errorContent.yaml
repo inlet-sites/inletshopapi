@@ -22,6 +22,18 @@ Response401:
           type: string
           example: Unauthorized user
 
+Response403:
+  application/json:
+    schema:
+      type: object
+      properties:
+        code:
+          type: number
+          example: 403
+        message:
+          type: string
+          example: Unauthorized access
+
 Response404:
   application/json:
     schema:
