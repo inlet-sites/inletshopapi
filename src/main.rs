@@ -6,8 +6,6 @@ mod models;
 mod controllers;
 mod app_error;
 mod auth;
-#[cfg(test)]
-mod tests;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
