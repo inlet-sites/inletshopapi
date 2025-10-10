@@ -88,6 +88,14 @@ impl Vendor {
         }
     }
 
+    pub async fn find_by_url(db: &Database, url: &String) -> Result<Vendor, AppError> {
+        match db.collection::<Vendor>("vendors").find_one(doc!{"url": url}).await {
+            Ok(Some(v)) => Ok(v),
+            Ok(None) => Err(AppError::not_found("The page you are looking for doesn't exist")),
+            Err(e) => Err(AppError::Database(e.into()))
+        }
+    }
+
     pub async fn update(self, db: &Database, data: Document) -> Result<Vendor, AppError> {
         match db.collection::<Vendor>("vendors").find_one_and_update(doc!{"_id": self._id}, doc!{"$set": data}).await? {
             Some(v) => Ok(v),
