@@ -1,0 +1,20 @@
+get:
+  operationId: vendorGetSelf
+  summary: Get Vendor (self)
+  security:
+    - VendorAuth: []
+  description: Retrieve the data for the vendor. All of the data for the actual vendor to see, including private information.
+  tags: [Vendor]
+  responses:
+    "200":
+      description: Successfully found and retrieved vendor's data.
+      content:
+        application/json:
+          schema:
+            $ref: "../../components/schemas/vendor.yaml"
+    "401":
+      $ref: "../../components/responses/401.yaml"
+    "403":
+      $ref: "../../components/responses/403.yaml"
+    "500":
+      $ref: "../../components/responses/500.yaml"

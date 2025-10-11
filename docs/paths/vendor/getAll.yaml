@@ -1,0 +1,15 @@
+get:
+  operationId: vendorGetAll
+  summary: Get Vendors
+  security: []
+  description: Retrieve a list of all vendors
+  tags: [Vendor]
+  responses:
+    "200":
+      description: Successfully retrieved list of all vendors
+      content:
+        application/json:
+          schema:
+            $ref: "../../components/schemas/vendor.yaml"
+    "400":
+      $ref: "../../components/responses/400.yaml"
