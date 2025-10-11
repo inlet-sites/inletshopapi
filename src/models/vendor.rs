@@ -3,7 +3,7 @@ use mongodb::{
     bson::{oid::ObjectId, DateTime, Document, doc},
     Database
 };
-
+use futures::stream::TryStreamExt;
 use crate::app_error::AppError;
 
 #[derive(Serialize, Deserialize)]
@@ -72,6 +72,16 @@ pub struct ResponseVendor {
 }
 
 impl Vendor {
+    pub async fn get_all(db: &Database, projection_doc: Document) -> Result<Vec<Document>, AppError> {
+        let cursor = db.collection::<Document>("vendors")
+            .find(doc!{})
+            .projection(projection_doc)
+            .await?;
+
+        let vendors: Vec<Document> = cursor.try_collect().await?;
+        Ok(vendors)
+    }
+
     pub async fn find_by_id(db: &Database, vendor_id: ObjectId) -> Result<Vendor, AppError> {
         match db.collection::<Vendor>("vendors").find_one(doc!{"_id": vendor_id}).await {
             Ok(Some(v)) => Ok(v),
