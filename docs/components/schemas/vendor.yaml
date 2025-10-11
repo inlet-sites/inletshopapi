@@ -19,7 +19,7 @@ properties:
   url:
     type: string
     description: URL to be used for the business on site. For example, 'example-store' is available at https://inlet.shop/example-store.
-    example: "inlet-sites"
+    example: inlet-sites
   public_data:
     $ref: "./publicData.yaml"
   html: 

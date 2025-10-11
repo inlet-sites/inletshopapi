@@ -10,6 +10,32 @@ get:
       content:
         application/json:
           schema:
-            $ref: "../../components/schemas/vendor.yaml"
-    "400":
-      $ref: "../../components/responses/400.yaml"
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: Unique ID of the vendor.
+                  example: 651f7b7e2c8b5e0a1c45d9b3
+                store:
+                  type: string
+                  description: Name of the business.
+                  example: Inlet Sites
+                url:
+                  type: string
+                  description: URL to be used for the business on site. For example, 'example-store' is available at https://inlet.shop/example-store.
+                  example: inlet-sites
+                public_data:
+                  type: object
+                  properties:
+                    slogan:
+                      type: string
+                      description: Short text for business slogan. Just a few words.
+                      example: Best in the Business!
+                    image:
+                      type: string
+                      description: URL of the main image for the business, such as the logo or an image of the storefront.
+                      example: /image/651f7b7e2c8b5e0a1c45d9b3
+    "500":
+      $ref: "../../components/responses/500.yaml"
