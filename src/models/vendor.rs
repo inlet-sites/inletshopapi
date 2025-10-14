@@ -27,7 +27,7 @@ pub struct Vendor {
 pub struct PublicData {
     pub phone: Option<String>,
     pub email: Option<String>,
-    pub address: Option<String>,
+    pub address: Option<Address>,
     pub slogan: Option<String>,
     pub description: Option<String>,
     pub image: Option<String>,
@@ -40,6 +40,12 @@ pub struct PublicData {
 pub struct StripeData {
     account_id: String,
     activated: bool
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct Address {
+    pub text: Option<String>,
+    pub link: Option<String>
 }
 
 #[derive(Serialize, Deserialize)]
