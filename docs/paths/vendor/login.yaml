@@ -1,33 +1,32 @@
-post:
-  operationId: vendorLogin
-  summary: Login
-  security: []
-  description: Validate the vendor and then set the cookie. Return basic vendor data.
-  tags: [Vendor]
-  requestBody:
+operationId: vendorLogin
+summary: Login
+security: []
+description: Validate the vendor and then set the cookie. Return basic vendor data.
+tags: [Vendor]
+requestBody:
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          email:
+            type: string
+            description: Email for account.
+            example: "john@inletsites.dev"
+          password:
+            type: string
+            description: Password for account.
+            example: Password123
+responses:
+  "200":
+    description: "Auth cookie set."
     content:
       application/json:
         schema:
-          type: object
-          properties:
-            email:
-              type: string
-              description: Email for account.
-              example: "john@inletsites.dev"
-            password:
-              type: string
-              description: Password for account.
-              example: Password123
-  responses:
-    "200":
-      description: "Auth cookie set."
-      content:
-        application/json:
-          schema:
-            $ref: "../../components/schemas/vendor.yaml"
-    "401":
-      $ref: "../../components/responses/401.yaml"
-    "404":
-      $ref: "../../components/responses/404.yaml"
-    "500":
-      $ref: "../../components/responses/500.yaml"
+          $ref: "../../components/schemas/vendor.yaml"
+  "401":
+    $ref: "../../components/responses/401.yaml"
+  "404":
+    $ref: "../../components/responses/404.yaml"
+  "500":
+    $ref: "../../components/responses/500.yaml"

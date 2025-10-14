@@ -1,0 +1,60 @@
+type: object
+description: Each day of the week as an array containing two strings, open time and close time. 24-hour HH:mm format.
+properties:
+  sunday:
+    type: array
+    nullable: true
+    items:
+      type: string
+    minItems: 2
+    maxItems: 2
+    example: null
+  monday:
+    type: array
+    nullable: true
+    items:
+      type: string
+    minItems: 2
+    maxItems: 2
+    example: ["09:00", "17:00"]
+  tuesday:
+    type: array
+    nullable: true
+    items:
+      type: string
+    minItems: 2
+    maxItems: 2
+    example: ["09:00", "17:00"]
+  wednesday:
+    type: array
+    nullable: true
+    items:
+      type: string
+    minItems: 2
+    maxItems: 2
+    example: ["09:00", "17:00"]
+  thursday:
+    type: array
+    nullable: true
+    items:
+      type: string
+    minItems: 2
+    maxItems: 2
+    example: ["09:00", "17:00"]
+  friday:
+    type: array
+    nullable: true
+    items:
+      type: string
+    minItems: 2
+    maxItems: 2
+    example: ["10:00", "13:00"]
+  saturday:
+    type: array
+    nullable: true
+    items:
+      type: string
+    minItems: 2
+    maxItems: 2
+    example: null
+

@@ -1,43 +1,42 @@
-get:
-  operationId: vendorGetFromUrl
-  summary: Get Vendor
-  security: []
-  description: Retrieve public vendor information with their URL.
-  tags: [Vendor]
-  parameters:
-    - name: vendor_url
-      in: path
-      required: true
-      description: Vendor unique URL
-      schema:
-        type: string
-        example: inlet-sites
-  responses:
-    "200":
-      description: Successfully found and retrieved vendor's data.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              id:
-                type: string
-                description: Unique ID of the vendor
-                example: 651f7b7e2c8b5e0a1c45d9b3
-              store:
-                type: string
-                description: name of the business
-                example: Inlet Sites
-              url:
-                type: string
-                description: URL to be used for the business on site. For exampl, 'example-store' is available at https://inlet.shop/example-store
-              public_data:
-                $ref: "../../components/schemas/publicData.yaml"
-              html:
-                type: string
-                description: An HTML page to display on the vendor's "About" page. This is for a custom page instead of the default.
-                example: <div>Custom HTML</div>
-    "404":
-      $ref: "../../components/responses/404.yaml"
-    "500":
-      $ref: "../../components/responses/500.yaml"
+operationId: vendorGetFromUrl
+summary: Get Vendor
+security: []
+description: Retrieve public vendor information with their URL.
+tags: [Vendor]
+parameters:
+  - name: vendor_url
+    in: path
+    required: true
+    description: Vendor unique URL
+    schema:
+      type: string
+      example: inlet-sites
+responses:
+  "200":
+    description: Successfully found and retrieved vendor's data.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            id:
+              type: string
+              description: Unique ID of the vendor
+              example: 651f7b7e2c8b5e0a1c45d9b3
+            store:
+              type: string
+              description: name of the business
+              example: Inlet Sites
+            url:
+              type: string
+              description: URL to be used for the business on site. For exampl, 'example-store' is available at https://inlet.shop/example-store
+            public_data:
+              $ref: "../../components/schemas/publicData.yaml"
+            html:
+              type: string
+              description: An HTML page to display on the vendor's "About" page. This is for a custom page instead of the default.
+              example: <div>Custom HTML</div>
+  "404":
+    $ref: "../../components/responses/404.yaml"
+  "500":
+    $ref: "../../components/responses/500.yaml"

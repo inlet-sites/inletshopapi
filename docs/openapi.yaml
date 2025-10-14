@@ -20,17 +20,25 @@ tags:
 paths:
   # Vendor
   /vendor/{vendor_id}/password/{token}:
-    $ref: "./paths/vendor/createPassword.yaml"
+    put:
+      $ref: "./paths/vendor/createPassword.yaml"
   /vendor/password:
-    $ref: "./paths/vendor/changePassword.yaml"
+    put:
+      $ref: "./paths/vendor/changePassword.yaml"
   /vendor/login:
-    $ref: "./paths/vendor/login.yaml"
+    post:
+      $ref: "./paths/vendor/login.yaml"
   /vendor/self:
-    $ref: "./paths/vendor/getSelf.yaml"
+    get:
+      $ref: "./paths/vendor/getSelf.yaml"
   /vendor/{vendor_url}:
-    $ref: "./paths/vendor/get.yaml"
+    get:
+      $ref: "./paths/vendor/get.yaml"
   /vendor:
-    $ref: "./paths/vendor/getAll.yaml"
+    get:
+      $ref: "./paths/vendor/getAll.yaml"
+    put:
+      $ref: "./paths/vendor/update.yaml"
 
 components:
   securitySchemes:
