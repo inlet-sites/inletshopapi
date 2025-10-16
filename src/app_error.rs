@@ -1,6 +1,7 @@
 use actix_web::{HttpResponse, ResponseError, http::StatusCode};
 use thiserror::Error;
 use serde::Serialize;
+use actix_multipart::MultipartError;
 
 #[derive(Serialize)]
 struct ErrorBody {
@@ -34,7 +35,10 @@ pub enum AppError {
     Database(#[from] mongodb::error::Error),
 
     #[error("{0}")]
-    JsonDeserializationError(String)
+    JsonDeserializationError(String),
+
+    #[error("Invalid Input")]
+    MultipartError(#[from] MultipartError)
 }
 
 impl ResponseError for AppError {
@@ -46,7 +50,8 @@ impl ResponseError for AppError {
             AppError::NotFound(_) => StatusCode::NOT_FOUND,
             AppError::Forbidden(_) => StatusCode::FORBIDDEN,
             AppError::Database(_) => StatusCode::INTERNAL_SERVER_ERROR,
-            AppError::JsonDeserializationError(_) => StatusCode::BAD_REQUEST
+            AppError::JsonDeserializationError(_) => StatusCode::BAD_REQUEST,
+            AppError::MultipartError(_) => StatusCode::BAD_REQUEST
         }
     }
 

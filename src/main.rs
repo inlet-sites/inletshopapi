@@ -18,6 +18,13 @@ async fn main() -> std::io::Result<()> {
     };
     let db = connect_db(&uri, database_name()).await;
 
+    //Initialize libvips (image processing)
+    //requires:
+    //  sudo apt install libvips-dev libglib2.0-dev
+    libvips::VipsApp::new("images", false)
+        .expect("Failed to initialize libvips");
+
+    //Spin up the server
     HttpServer::new (move || {
         App::new()
             .app_data(web::Data::new(db.clone()))
