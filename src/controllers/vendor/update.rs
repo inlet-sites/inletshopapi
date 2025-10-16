@@ -170,3 +170,50 @@ fn create_hours_doc(hours: Hours) -> Document {
 
     hours_doc
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    //create_update_doc
+    #[test]
+    fn creates_proper_data() {
+        let body = Body {
+            stripe_activated: Some(true),
+            new_order_send_email: None,
+            public_data: Some(PublicData {
+                phone: None,
+                email: Some(String::from("test@inletsites.dev")),
+                address: None,
+                slogan: Some(String::from("A new slogan")),
+                description: None,
+                hours: Some(Hours {
+                    sunday: None,
+                    monday: Some(vec![String::from("09:00"), String::from("17:00")]),
+                    tuesday: None,
+                    wednesday: None,
+                    thursday: None,
+                    friday: None,
+                    saturday: None
+                }),
+                links: None,
+                website: Some(String::from("https://inletsites.dev"))
+            })
+        };
+
+        let doc = create_update_doc(body);
+
+        let stripe_doc = doc.get_document("stripe").unwrap();
+        assert_eq!(stripe_doc.get_bool("activated").unwrap(), true);
+
+        let public_data_doc = doc.get_document("public_data").unwrap();
+        assert_eq!(public_data_doc.get_str("email").unwrap(), "test@inletsites.dev");
+        assert_eq!(public_data_doc.get_str("slogan").unwrap(), "A new slogan");
+        assert_eq!(public_data_doc.get_str("website").unwrap(), "https://inletsites.dev");
+
+        let hours_doc = public_data_doc.get_document("hours").unwrap();
+        let monday = hours_doc.get_array("monday").unwrap();
+        assert_eq!(monday[0], "09:00".into());
+        assert_eq!(monday[1], "17:00".into());
+    }
+}
