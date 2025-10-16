@@ -17,6 +17,9 @@ requestBody:
             type: string
             description: Password for account.
             example: Password123
+        required:
+          - email
+          - password
 responses:
   "200":
     description: "Auth cookie set."

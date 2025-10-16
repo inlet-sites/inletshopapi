@@ -10,7 +10,7 @@ requestBody:
       schema:
         type: object
         properties:
-          stripeActivated:
+          stripe_activated:
             type: boolean
             description: Determines whether the vendor has completed the onboarding process for Stripe.
             example: false
@@ -51,16 +51,21 @@ requestBody:
               hours:
                 $ref: "../../components/schemas/hours.yaml"
               links:
-                type: object
-                properties:
-                  text:
-                    type: string
-                    description: Text display for the link
-                    example: Facebook
-                  url:
-                    type: string
-                    description: URL to the resource
-                    example: https://facebook.com/my-page
+                type: array
+                items:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                      description: Text display for the link
+                      example: Facebook
+                    url:
+                      type: string
+                      description: URL to the resource
+                      example: https://facebook.com/my-page
+                  required:
+                    - text
+                    - url
               website:
                 type: string
                 description: URL of personal website
