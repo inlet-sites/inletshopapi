@@ -1,5 +1,6 @@
 use actix_web::{HttpServer, web, App};
 use mongodb::{Client, Database};
+use crate::app_error::AppError;
 
 mod routes;
 mod models;
@@ -20,6 +21,11 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new (move || {
         App::new()
             .app_data(web::Data::new(db.clone()))
+            .app_data(
+                web::JsonConfig::default().error_handler(|err, _req| {
+                    AppError::JsonDeserializationError(err.to_string()).into()
+                })
+            )
             .configure(routes::other::config)
             .configure(routes::vendor::config)
     })

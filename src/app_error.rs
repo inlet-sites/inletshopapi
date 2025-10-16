@@ -31,7 +31,10 @@ pub enum AppError {
     Forbidden(String),
 
     #[error("Internal Server Error")]
-    Database(#[from] mongodb::error::Error)
+    Database(#[from] mongodb::error::Error),
+
+    #[error("{0}")]
+    JsonDeserializationError(String)
 }
 
 impl ResponseError for AppError {
@@ -42,7 +45,8 @@ impl ResponseError for AppError {
             AppError::Auth => StatusCode::UNAUTHORIZED,
             AppError::NotFound(_) => StatusCode::NOT_FOUND,
             AppError::Forbidden(_) => StatusCode::FORBIDDEN,
-            AppError::Database(_) => StatusCode::INTERNAL_SERVER_ERROR
+            AppError::Database(_) => StatusCode::INTERNAL_SERVER_ERROR,
+            AppError::JsonDeserializationError(_) => StatusCode::BAD_REQUEST
         }
     }
 
