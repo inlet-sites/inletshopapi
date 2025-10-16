@@ -73,7 +73,7 @@ requestBody:
 
 responses:
   "200":
-    description: "Update vendor data"
+    description: Update vendor data
     content:
       application/json:
         schema:

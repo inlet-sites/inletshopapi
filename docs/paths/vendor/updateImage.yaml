@@ -1,0 +1,25 @@
+operationId: vendorUpdateImage
+summary: Update Image
+security:
+  - VendorAuth: []
+description: Update the image for the vendor profile
+tags: [Vendor]
+requestBody:
+  content:
+    multipart/form-data:
+      schema:
+        type: object
+        properties:
+          image:
+            type: string
+            format: binary
+            description: Vendor profile image to upload 
+responses:
+  "200":
+    description: Image successfully updated
+    content:
+      application/json:
+        schema:
+          $ref: "../../components/schemas/vendor.yaml"
+  "500":
+    $ref: "../../components/responses/500.yaml"

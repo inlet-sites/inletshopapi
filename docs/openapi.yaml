@@ -39,6 +39,9 @@ paths:
       $ref: "./paths/vendor/getAll.yaml"
     put:
       $ref: "./paths/vendor/update.yaml"
+  /vendor/image:
+    put:
+      $ref: "./paths/vendor/updateImage.yaml"
 
 components:
   securitySchemes:
