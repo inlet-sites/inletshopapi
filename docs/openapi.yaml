@@ -42,6 +42,9 @@ paths:
   /vendor/image:
     put:
       $ref: "./paths/vendor/updateImage.yaml"
+  /vendor/password/reset:
+    post:
+      $ref: "./paths/vendor/resetPassword.yaml"
 
 components:
   securitySchemes:
