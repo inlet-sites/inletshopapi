@@ -51,3 +51,38 @@ fn create_update_doc(pass: &String) -> Result<Document, AppError> {
         "token": Uuid::new_v4().to_string()
     })
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    //token_match
+    #[test]
+    fn matching_token_succeeds() {
+        let token = Uuid::new_v4().to_string();
+
+        let result = token_match(&token, &token).unwrap();
+        assert_eq!(result, ());
+    }
+
+    #[test]
+    fn bad_token_fails() {
+        let token_one = Uuid::new_v4().to_string();
+        let token_two = Uuid::new_v4().to_string();
+
+        let result = token_match(&token_one, &token_two);
+        assert!(result.is_err());
+    }
+
+    //create_update_doc
+    #[test]
+    fn creates_valid_doc() {
+        let result = create_update_doc(&String::from("password123")).unwrap();
+
+        assert!(!result.is_empty());
+        assert!(result.contains_key("pass_hash"));
+        assert!(result.contains_key("token"));
+        assert_ne!(result.get_str("pass_hash").unwrap(), "password123");
+        assert!(Uuid::parse_str(&result.get_str("token").unwrap()).is_ok());
+    }
+}
