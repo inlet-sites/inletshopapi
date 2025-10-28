@@ -7,3 +7,4 @@ pub mod get_vendor;
 pub mod get_all;
 pub mod update;
 pub mod update_image;
+pub mod reset_password;

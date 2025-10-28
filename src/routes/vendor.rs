@@ -7,7 +7,9 @@ use crate::controllers::vendor::{
     get_vendor,
     get_all,
     update,
-    update_image
+    update_image,
+
+    reset_password
 };
 
 pub fn config(cfg: &mut web::ServiceConfig) {
@@ -19,4 +21,6 @@ pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.service(get_all::route);
     cfg.service(update::route);
     cfg.service(update_image::route);
+
+    cfg.service(reset_password::route);
 }
