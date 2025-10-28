@@ -1,3 +1,4 @@
+use actix_multipart::Multipart;
 use argon2::{
     Argon2,
     password_hash::{
@@ -8,6 +9,8 @@ use argon2::{
         rand_core::OsRng
     }
 };
+use futures_util::TryStreamExt;
+use std::collections::HashMap;
 use crate::app_error::AppError;
 #[cfg(test)]
 use crate::models::vendor::{
@@ -47,6 +50,23 @@ pub fn hash_password(pass: &String) -> Result<String, AppError> {
         Ok(h) => Ok(h.to_string()),
         Err(_) => Err(AppError::InternalError)
     }
+}
+
+pub async fn read_multipart(mut payload: Multipart) -> Result<HashMap<String, Vec<u8>>, AppError> {
+    let mut data = HashMap::new();
+
+    while let Some(mut field) = payload.try_next().await? {
+        let name = field.name().unwrap_or("").to_string();
+        let mut bytes = Vec::new();
+
+        while let Some(chunk) = field.try_next().await? {
+            bytes.extend_from_slice(&chunk);
+        }
+
+        data.insert(name, bytes);
+    }
+
+    Ok(data)
 }
 
 #[cfg(test)]
