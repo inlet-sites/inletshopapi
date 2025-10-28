@@ -20,6 +20,17 @@ responses:
     content:
       application/json:
         schema:
-          $ref: "../../components/schemas/vendor.yaml"
+          type: object
+          properties:
+            image:
+              type: string
+              description: URL path segment for the image
+              example: /inletshop/thumbnails/2025bb88-cb3c-44d8-a1f6-7d767a735d27.avif
+  "400":
+    $ref: "../../components/responses/400.yaml"
+  "401":
+    $ref: "../../components/responses/401.yaml"
+  "403":
+    $ref: "../../components/responses/403.yaml"
   "500":
     $ref: "../../components/responses/500.yaml"
