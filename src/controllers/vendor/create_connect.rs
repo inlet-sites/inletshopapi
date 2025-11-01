@@ -66,3 +66,19 @@ fn create_update_doc(account_number: &String) -> Document {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    //create_update_doc
+    #[test]
+    fn creates_valid_doc() {
+        let result = create_update_doc(&String::from("123456"));
+        let stripe_doc = result.get_document("stripe").expect("Stripe sub-document doesn't exist");
+
+        assert!(!stripe_doc.is_empty());
+        assert!(stripe_doc.contains_key("account_id"));
+        assert!(stripe_doc.contains_key("activated"));
+    }
+}

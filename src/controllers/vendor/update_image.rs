@@ -81,7 +81,6 @@ fn write_image(image: Vec<u8>) -> Result<String, AppError> {
 
     tokio::spawn(async move {
         let dir = "/srv/inletshop/thumbnails";
-        //let _ = fs::create_dir_all(dir).await;
         match fs::create_dir_all(dir).await {
             Ok(_) => (),
             Err(e) => println!("{}", e)
