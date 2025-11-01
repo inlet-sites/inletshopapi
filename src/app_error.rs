@@ -38,7 +38,13 @@ pub enum AppError {
     JsonDeserializationError(String),
 
     #[error("Invalid Input")]
-    MultipartError(#[from] MultipartError)
+    MultipartError(#[from] MultipartError),
+
+    #[error("Internal Server Error")]
+    ReqwestError(#[from] reqwest::Error),
+
+    #[error("Strip server unresponsive")]
+    StripeError
 }
 
 impl ResponseError for AppError {
@@ -51,7 +57,9 @@ impl ResponseError for AppError {
             AppError::Forbidden(_) => StatusCode::FORBIDDEN,
             AppError::Database(_) => StatusCode::INTERNAL_SERVER_ERROR,
             AppError::JsonDeserializationError(_) => StatusCode::BAD_REQUEST,
-            AppError::MultipartError(_) => StatusCode::BAD_REQUEST
+            AppError::MultipartError(_) => StatusCode::BAD_REQUEST,
+            AppError::ReqwestError(_) => StatusCode::INTERNAL_SERVER_ERROR,
+            AppError::StripeError => StatusCode::INTERNAL_SERVER_ERROR
         }
     }
 

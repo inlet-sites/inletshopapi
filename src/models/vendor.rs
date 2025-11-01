@@ -38,8 +38,8 @@ pub struct PublicData {
 
 #[derive(Serialize, Deserialize)]
 pub struct StripeData {
-    account_id: String,
-    activated: bool
+    pub account_id: String,
+    pub activated: bool
 }
 
 #[derive(Serialize, Deserialize)]
@@ -112,7 +112,7 @@ impl Vendor {
         }
     }
 
-    pub async fn update(self, db: &Database, data: Document) -> Result<Vendor, AppError> {
+    pub async fn update(&self, db: &Database, data: Document) -> Result<Vendor, AppError> {
         match db.collection::<Vendor>("vendors").find_one_and_update(doc!{"_id": self._id}, doc!{"$set": data}).await? {
             Some(v) => Ok(v),
             None => Err(AppError::not_found("User with this ID does not exist"))
