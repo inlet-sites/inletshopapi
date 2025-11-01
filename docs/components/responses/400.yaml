@@ -6,7 +6,9 @@ content:
       properties:
         code:
           type: number
+          description: HTTP response code
           example: 400
         message:
           type: string
+          description: Message describing the error
           example: "Json deserialize error: invalid type: map, expected a string at line 3 column 13"

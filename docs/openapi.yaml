@@ -45,6 +45,9 @@ paths:
   /vendor/password/reset:
     post:
       $ref: "./paths/vendor/resetPassword.yaml"
+  /vendor/connect:
+    post:
+      $ref: "./paths/vendor/createConnect.yaml"
 
 components:
   securitySchemes:

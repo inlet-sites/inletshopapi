@@ -1,0 +1,23 @@
+operationId: createConnect
+summary: Create Connected Account
+security:
+  - VendorAuth: []
+description: Create connected account on Stripe for the user to sell online
+tags: [Vendor]
+responses:
+  "200":
+    description: "Connected account successfully created"
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            account:
+              type: string
+              description: New Stripe Connected account ID
+  "400":
+    $ref: "../../components/responses/400.yaml"
+  "403":
+    $ref: "../../components/responses/403.yaml"
+  "500":
+    $ref: "../../components/responses/500.yaml"

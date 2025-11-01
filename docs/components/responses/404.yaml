@@ -6,7 +6,9 @@ content:
       properties:
         code:
           type: number
+          description: HTTP response code
           example: 404
         message:
           type: string
+          description: Message describing the error
           example: Vendor with that ID does not exist
