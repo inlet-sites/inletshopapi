@@ -10,8 +10,8 @@ mod auth;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    let node_env = std::env::var("NODE_ENV").unwrap_or_else(|_| "development".to_string());
-    let uri = if node_env == "production" {
+    let app_env = std::env::var("APP_ENV").unwrap_or_else(|_| "development".to_string());
+    let uri = if app_env == "production" {
         std::env::var("MONGO_URI").expect("MONGO_URI must be set in production")
     } else {
         "mongodb://127.0.0.1:27017".to_string()
