@@ -1,0 +1,24 @@
+operationId: createSession
+summary: Create Stripe Session
+security:
+  - VendorAuth: []
+description: Create a Stripe account session for the user to use to set up their Stripe account.
+tags: [Vendor]
+responses:
+  "200":
+    description: "Stripe account session successfully created"
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            session_secret:
+              type: string
+              description: A string secret for the front-end to use to connect to Stripe onboarding process
+              example: _OXIKXxEihJokDBnDoe2sgG5OGSO2Q12shKvbeboxpALZGng
+  "401":
+    $ref: "../../components/responses/401.yaml"
+  "403":
+    $ref: "../../components/responses/403.yaml"
+  "500":
+    $ref: "../../components/responses/500.yaml"

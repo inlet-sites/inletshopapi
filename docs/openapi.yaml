@@ -48,6 +48,9 @@ paths:
   /vendor/connect:
     post:
       $ref: "./paths/vendor/createConnect.yaml"
+  /vendor/connect/session:
+    post:
+      $ref: "./paths/vendor/createSession.yaml"
 
 components:
   securitySchemes:
