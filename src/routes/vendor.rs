@@ -10,7 +10,8 @@ use crate::controllers::vendor::{
     update_image,
 
     reset_password,
-    create_connect
+    create_connect,
+    create_session
 };
 
 pub fn config(cfg: &mut web::ServiceConfig) {
@@ -25,4 +26,5 @@ pub fn config(cfg: &mut web::ServiceConfig) {
 
     cfg.service(reset_password::route);
     cfg.service(create_connect::route);
+    cfg.service(create_session::route);
 }
