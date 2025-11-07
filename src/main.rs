@@ -7,6 +7,7 @@ mod models;
 mod controllers;
 mod app_error;
 mod auth;
+mod emails;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

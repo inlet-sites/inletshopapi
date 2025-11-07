@@ -7,7 +7,7 @@ pub mod get_vendor;
 pub mod get_all;
 pub mod update;
 pub mod update_image;
+pub mod password_email;
 pub mod reset_password;
 pub mod create_connect;
 pub mod create_session;
-pub mod password_email;
