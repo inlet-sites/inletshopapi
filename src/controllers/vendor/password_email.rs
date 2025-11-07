@@ -6,7 +6,7 @@ use reqwest::Client;
 use crate::{
     app_error::AppError,
     models::vendor::Vendor,
-    emails::reset_password::reset_password
+    emails::reset_password
 };
 
 #[derive(Deserialize)]
