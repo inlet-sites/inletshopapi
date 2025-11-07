@@ -10,11 +10,11 @@ pub struct Product {
     pub images: Option<Vec<String>>,
     pub active: bool,
     pub archived: bool,
-    pub variations: Vec<Variation>
+    pub prices: Vec<Price>
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct Variation {
+pub struct Price {
     pub descriptor: String,
     pub price: i32,
     pub quantity: i32,

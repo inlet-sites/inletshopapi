@@ -41,7 +41,7 @@ async fn send_email(vendor: Vendor) -> Result<(), AppError> {
                 "name": vendor.owner
             }
         }],
-        "subject": "Rest Password for Inlet.Shop",
+        "subject": "Reset Password for Inlet.Shop",
         "htmlbody": reset_password(vendor.owner,  vendor._id.to_string(), vendor.token)
     });
 
