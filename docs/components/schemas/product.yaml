@@ -1,0 +1,41 @@
+type: object
+properties:
+  id:
+    type: string
+    format: objectid
+    description: Unique ObjectID of the product
+    example: 68e6cc33cd163f503cce5f47
+  vendor:
+    type: string
+    format: objectid
+    description: ObjectId for the owner (Vendor) of this product
+    example: 68ee98af7979fae11ece5f48
+  name:
+    type: string
+    description: Name of the product
+    example: Table
+  tags:
+    type: array
+    description: A list of one-word descriptors for classifying the product.
+    items:
+      type: string
+    example: ["furniture", "kitchen"]
+  images:
+    type: array
+    description: A list of links to images of the product
+    items:
+      type: string
+      format: url
+    example: ["/documents/8d34b52d-30a2-42f7-b9a3-1fa40d2188d2.avif"]
+  active:
+    type: boolean
+    description: Flag used by developers for removing the item from display if necessary.
+    example: true
+  archived:
+    type: boolean
+    description: Flag used by vendors to 'delete' the product.
+    example: false
+  prices:
+    type: array
+    description: List of prices/variations of the product.
+    $ref: "./variation.yaml"

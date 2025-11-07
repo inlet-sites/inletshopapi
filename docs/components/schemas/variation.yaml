@@ -1,0 +1,39 @@
+type: object
+properties:
+  id:
+    type: string
+    format: objectid
+    description: Unique ObjectId for the variation
+    example: 68a0f2358cbf128a1a5fe56a
+  price:
+    type: number
+    description: Cost for this price/variation. In cents.
+    example: 9999
+  quantity:
+    type: number
+    description: Quantity of this price that is available for purchase
+    example: 12
+  shipping:
+    type: number
+    description: Cost of shipping for the price. In cents.
+    example: 399
+  images:
+    type: array
+    description: List of URLs for images representing this price/variation.
+    example: ["/product_images/4e0e8609-8a54-478d-a3b6-0fcdd242d651.avif", "/product_images/f6a43ccc-0d33-4a86-971a-fab9bcad61fb.avif"]
+    items:
+      type: string
+      format: url
+  price_id:
+    type: string
+    description: Stripe Price ID, if applicable
+    example: price_1RVxiFACCTp8wmXnKE71F6cr
+  purchase_option:
+    type: string
+    enum: [ship, buy, list],
+    description: An enum representing how the item can be purchased on the site, if at all.
+    exmaple: ship
+  archived:
+    type: boolean
+    description: Flag for representing whether the vendor has 'deleted' this price.
+    example: false

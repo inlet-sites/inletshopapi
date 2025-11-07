@@ -2,6 +2,7 @@ type: object
 properties:
   id:
     type: string
+    format: objectid
     description: Unique ID of the vendor.
     example: 651f7b7e2c8b5e0a1c45d9b3
   email:
