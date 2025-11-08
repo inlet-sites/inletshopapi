@@ -8,6 +8,7 @@ mod controllers;
 mod app_error;
 mod auth;
 mod emails;
+mod dto;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -30,6 +31,7 @@ async fn main() -> std::io::Result<()> {
             )
             .configure(routes::other::config)
             .configure(routes::vendor::config)
+            .configure(routes::product::config)
     })
         .bind(("0.0.0.0", 8001))?
         .run()
