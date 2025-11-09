@@ -30,7 +30,7 @@ properties:
     example: price_1RVxiFACCTp8wmXnKE71F6cr
   purchase_option:
     type: string
-    enum: [ship, buy, list],
+    enum: [ship, buy, list]
     description: An enum representing how the item can be purchased on the site, if at all.
     exmaple: ship
   archived:

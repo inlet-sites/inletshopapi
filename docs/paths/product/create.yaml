@@ -1,0 +1,85 @@
+operationId: productCreate
+summary: Create Product
+security:
+  - VendorAuth: []
+description: Create a new product for the vendor.
+tags: [Product]
+requestBody:
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - name
+          - tags
+          - archived
+          - prices
+        properties:
+          name:
+            type: string
+            description: Name of the product
+            example: Table
+          tags:
+            type: array
+            description: List of short descriptors for categorizing the product
+            example: ["furniture", "kitchen"]
+            items:
+              type: string
+          archived:
+            type: boolean
+            description: Whether this item is marked as 'deleted' for the vendor. Generally should always be true on product creation.
+            example: false
+          prices:
+            type: array
+            description: List of the prices/variations of this product.
+            items:
+              type: object
+              required:
+                - descriptor
+                - price
+                - quantity
+                - shipping
+                - purchase_option
+              properties:
+                descriptor:
+                  type: string
+                  description: Name of the price/variation
+                price:
+                  type: number
+                  description: Actual price of item for this price/variation. In cents.
+                quantity:
+                  type: number
+                  description: Quantity available for purchase. Integer.
+                shipping:
+                  type: number
+                  description: Cost of shipping. In cents.
+                purchase_option:
+                  type: string
+                  enum: ["ship", "buy", "list"]
+                  description: How the item can be purchased. "ship" is full online purchase and the item is shipped. "buy" is purchase online but must be picked up in store. "list" means it is only listed here and must be purchased in store.
+              example:
+                  - descriptor: Small
+                    price: 15000
+                    quantity: 10
+                    shipping: 599
+                    purchase_option: ship
+                  - descriptor: Large
+                    price: 25000
+                    quantity: 2
+                    shipping: 799
+                    purchase_option: ship
+responses:
+  "200":
+    description: Product successfully created
+    content:
+      application/json:
+        schema:
+          $ref: "../../components/schemas/product.yaml"
+  "400":
+    $ref: "../../components/responses/400.yaml"
+  "401":
+    $ref: "../../components/responses/401.yaml"
+  "403":
+    $ref: "../../components/responses/403.yaml"
+  "500":
+    $ref: "../../components/responses/500.yaml"

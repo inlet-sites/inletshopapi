@@ -16,6 +16,8 @@ servers:
 tags:
   - name: Vendor
     description: Operations related to vendors
+  - name: Product
+    description: Operations related to vendor products
 
 paths:
   # Vendor
@@ -54,7 +56,13 @@ paths:
   /vendor/connect/session:
     post:
       $ref: "./paths/vendor/createSession.yaml"
+  /product:
+    post:
+      $ref: "./paths/product/create.yaml"
 
 components:
+  schemas:
+    Price:
+      $ref: "./components/schemas/price.yaml"
   securitySchemes:
     $ref: "./components/security.yaml"

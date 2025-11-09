@@ -38,4 +38,5 @@ properties:
   prices:
     type: array
     description: List of prices/variations of the product.
-    $ref: "./price.yaml"
+    items:
+      $ref: "#/components/schemas/Price"
