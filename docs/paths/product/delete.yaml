@@ -1,0 +1,28 @@
+operationId: productDelete
+summary: Delete Product
+security:
+  - VendorAuth: []
+description: Delete a product. For the purpose of records, the product is not truly deleted, just marked as archived.
+tags: [Product]
+parameters:
+  - name: product_id
+    in: path
+    required: true
+    description: ObjectId of the product to be deleted.
+    schema:
+      type: string
+      example: 67322af7d3e6b0b3a4c4df18
+responses:
+  "200":
+    description: Product successfully deleted
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            success:
+              type: boolean
+              description: Always true
+              example: true
+  "500":
+    $ref: "../../components/responses/500.yaml"

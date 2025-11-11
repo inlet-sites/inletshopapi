@@ -59,6 +59,9 @@ paths:
   /product:
     post:
       $ref: "./paths/product/create.yaml"
+  /product/{product_id}:
+    delete:
+      $ref: "./paths/product/delete.yaml"
 
 components:
   schemas:
