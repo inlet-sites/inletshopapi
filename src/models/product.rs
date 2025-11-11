@@ -1,7 +1,7 @@
 use serde::{Serialize, Deserialize};
 use mongodb::{
     Database,
-    bson::{DateTime, doc, oid::ObjectId}
+    bson::{DateTime, Document, doc, oid::ObjectId}
 };
 use crate::app_error::AppError;
 
@@ -43,6 +43,29 @@ impl Product {
         match db.collection::<Product>("products").insert_one(self).await {
             Ok(_) => Ok(()),
             Err(e) => Err(AppError::Database(e.into()))
+        }
+    }
+
+    pub async fn find_by_id(db: &Database, id: ObjectId) -> Result<Product, AppError> {
+        match db.collection::<Product>("products").find_one(doc!{"_id": id}).await {
+            Ok(Some(p)) => Ok(p),
+            Ok(None) => Err(AppError::not_found("Product with this ID does not exist")),
+            Err(e) => Err(AppError::Database(e.into()))
+        }
+    }
+
+    pub async fn update(&self, db: &Database, update_doc: Document) -> Result<Product, AppError> {
+        match db.collection::<Product>("products").find_one_and_update(doc!{"_id": self._id}, doc!{"$set": update_doc}).await? {
+            Some(p) => Ok(p),
+            None => Err(AppError::not_found("Product with this ID does not exist"))
+        }
+    }
+
+    pub fn is_owned(&self, vendor_id: &ObjectId) -> Result<(), AppError> {
+        if self.vendor == *vendor_id {
+            Ok(())
+        } else {
+            Err(AppError::forbidden("Unauthorized to edit this product"))
         }
     }
 }
