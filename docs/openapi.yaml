@@ -56,12 +56,17 @@ paths:
   /vendor/connect/session:
     post:
       $ref: "./paths/vendor/createSession.yaml"
+
+  # Product
   /product:
     post:
       $ref: "./paths/product/create.yaml"
   /product/{product_id}:
     delete:
       $ref: "./paths/product/delete.yaml"
+  /vendor/{vendor_id}/product:
+    get:
+      $ref: "./paths/product/getVendorProducts.yaml"
 
 components:
   schemas:
