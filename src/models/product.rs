@@ -3,6 +3,7 @@ use mongodb::{
     Database,
     bson::{DateTime, Document, doc, oid::ObjectId}
 };
+use futures::stream::TryStreamExt;
 use crate::app_error::AppError;
 
 #[derive(Serialize, Deserialize)]
@@ -38,6 +39,20 @@ pub enum PurchaseOption {
     List
 }
 
+#[derive(Deserialize)]
+pub struct ShortProduct {
+    pub _id: ObjectId,
+    pub name: String,
+    pub tags: Vec<String>,
+    pub images: Vec<String>,
+    pub prices: Vec<ShortPrice>
+}
+
+#[derive(Deserialize)]
+pub struct ShortPrice {
+    pub price: i32
+}
+
 impl Product {
     pub async fn insert(&self, db: &Database) -> Result<(), AppError> {
         match db.collection::<Product>("products").insert_one(self).await {
@@ -52,6 +67,24 @@ impl Product {
             Ok(None) => Err(AppError::not_found("Product with this ID does not exist")),
             Err(e) => Err(AppError::Database(e.into()))
         }
+    }
+
+    pub async fn find_by_vendor(db: &Database, vendor_id: ObjectId) -> Result<Vec<ShortProduct>, AppError> {
+        let projection = doc!{
+            "_id": 1,
+            "name": 1,
+            "tags": 1,
+            "images": 1,
+            "prices.price": 1
+        };
+
+        let cursor = db.collection::<ShortProduct>("products")
+            .find(doc!{"vendor": vendor_id})
+            .projection(projection)
+            .await?;
+
+        let products: Vec<ShortProduct> = cursor.try_collect().await?;
+        Ok(products)
     }
 
     pub async fn update(&self, db: &Database, update_doc: Document) -> Result<Product, AppError> {
