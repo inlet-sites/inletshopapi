@@ -2,6 +2,16 @@ operationId: productGetFromVendor
 summary: Get Vendor Products
 description: Retrieve a list of vendor products for sale
 tags: [Product]
+parameters:
+  - name: page
+    in: query
+    required: false
+    description: Page of results to display. 0 indexed.
+    schema:
+      type: integer
+      minimum: 0
+      default: 0
+    example: 1
 responses:
   "200":
     description: Array of products available for sale. Returns only necessary data.
