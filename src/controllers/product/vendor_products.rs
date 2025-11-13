@@ -1,5 +1,5 @@
 use actix_web::{HttpResponse, web, get};
-use serde::Serialize;
+use serde::{Serialize, Deserialize};
 use mongodb::{
     Database,
     bson::oid::ObjectId
@@ -9,14 +9,20 @@ use crate::{
     models::product::{Product, ShortProduct},
 };
 
+#[derive(Deserialize)]
+struct Parameters {
+    page: Option<u64>
+}
+
 #[get("/vendor/{vendor_id}/product")]
 pub async fn route(
     db: web::Data<Database>,
-    path: web::Path<String>
+    path: web::Path<String>,
+    query: web::Query<Parameters>
 ) -> Result<HttpResponse, AppError> {
     let vendor_id = ObjectId::parse_str(path.into_inner())
         .map_err(|_| AppError::invalid_input("Invalid vendor ID"))?;
-    let products = Product::find_by_vendor(&db, vendor_id).await?;
+    let products = Product::find_by_vendor(&db, vendor_id, query.page.unwrap_or(0)).await?;
     let response_products: Vec<ResponseProduct> = products
         .into_iter()
         .map(|p| ResponseProduct::from_short_product(p)).collect();
