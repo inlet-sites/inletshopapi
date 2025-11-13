@@ -76,3 +76,56 @@ impl ResponseProduct {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::models::product::ShortPrice;
+
+    #[test]
+    fn creates_single_price_response() {
+        let short_product = ShortProduct {
+            _id: ObjectId::new(),
+            name: String::from("Item"),
+            tags: vec![String::from("one"), String::from("two")],
+            images: vec![String::from("linky")],
+            prices: vec![ShortPrice {
+                price: 1299
+            }]
+        };
+
+        let result = ResponseProduct::from_short_product(short_product);
+        assert_eq!(result.name, "Item");
+        assert_eq!(result.tags.len(), 2);
+        assert!(matches!(result.price, ResponsePrice::Single(_)));
+    }
+
+    #[test]
+    fn creates_multi_price_response() {
+        let short_product = ShortProduct {
+            _id: ObjectId::new(),
+            name: String::from("Item"),
+            tags: vec![String::from("three")],
+            images: Vec::new(),
+            prices: vec![
+                ShortPrice {
+                    price: 1299
+                },
+                ShortPrice {
+                    price: 1587
+                },
+                ShortPrice {
+                    price: 123
+                },
+                ShortPrice {
+                    price: 777
+                }
+            ]
+        };
+
+        let result = ResponseProduct::from_short_product(short_product);
+        assert_eq!(result.name, "Item");
+        assert_eq!(result.tags.len(), 1);
+        assert!(matches!(result.price, ResponsePrice::Multi((123, 1587))));
+    }
+}
