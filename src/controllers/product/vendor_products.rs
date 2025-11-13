@@ -11,7 +11,8 @@ use crate::{
 
 #[derive(Deserialize)]
 struct Parameters {
-    page: Option<u64>
+    page: Option<u64>,
+    results: Option<i64>
 }
 
 #[get("/vendor/{vendor_id}/product")]
@@ -22,11 +23,28 @@ pub async fn route(
 ) -> Result<HttpResponse, AppError> {
     let vendor_id = ObjectId::parse_str(path.into_inner())
         .map_err(|_| AppError::invalid_input("Invalid vendor ID"))?;
-    let products = Product::find_by_vendor(&db, vendor_id, query.page.unwrap_or(0)).await?;
+    let products = Product::find_by_vendor(
+        &db,
+        vendor_id,
+        query.page.unwrap_or(0),
+        get_results_count(query.results.unwrap_or(50))
+    ).await?;
     let response_products: Vec<ResponseProduct> = products
         .into_iter()
         .map(|p| ResponseProduct::from_short_product(p)).collect();
     Ok(HttpResponse::Ok().json(response_products))
+}
+
+fn get_results_count(n: i64) -> i64 {
+    if n < 10 {
+        return 10;
+    }
+
+    if n > 100 {
+        return 100;
+    }
+
+    n
 }
 
 #[derive(Serialize)]
@@ -127,5 +145,24 @@ mod tests {
         assert_eq!(result.name, "Item");
         assert_eq!(result.tags.len(), 1);
         assert!(matches!(result.price, ResponsePrice::Multi((123, 1587))));
+    }
+
+    //get_results_count
+    #[test]
+    fn results_count_is_good() {
+        let result = get_results_count(55);
+        assert_eq!(result, 55);
+    }
+
+    #[test]
+    fn results_count_is_low() {
+        let result = get_results_count(3);
+        assert_eq!(result, 10);
+    }
+
+    #[test]
+    fn results_count_is_high() {
+        let result = get_results_count(199);
+        assert_eq!(result, 100);
     }
 }

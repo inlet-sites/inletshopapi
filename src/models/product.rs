@@ -69,7 +69,12 @@ impl Product {
         }
     }
 
-    pub async fn find_by_vendor(db: &Database, vendor_id: ObjectId, page: u64) -> Result<Vec<ShortProduct>, AppError> {
+    pub async fn find_by_vendor(
+        db: &Database,
+        vendor_id: ObjectId,
+        page: u64,
+        results: i64
+    ) -> Result<Vec<ShortProduct>, AppError> {
         let projection = doc!{
             "_id": 1,
             "name": 1,
@@ -81,7 +86,7 @@ impl Product {
         let cursor = db.collection::<ShortProduct>("products")
             .find(doc!{"vendor": vendor_id})
             .skip(page)
-            .limit(50)
+            .limit(results)
             .projection(projection)
             .await?;
 
