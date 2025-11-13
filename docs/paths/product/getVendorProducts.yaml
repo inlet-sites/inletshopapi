@@ -12,6 +12,16 @@ parameters:
       minimum: 0
       default: 0
     example: 1
+  - name: results
+    in: query
+    required: false
+    description: Number of results to retrieve
+    schema:
+      type: integer
+      minimum: 10
+      maximum: 100
+      default: 50
+    example: 25
 responses:
   "200":
     description: Array of products available for sale. Returns only necessary data.
