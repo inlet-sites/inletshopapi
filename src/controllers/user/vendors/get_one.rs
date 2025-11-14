@@ -15,7 +15,7 @@ struct ResponseVendor {
     html: Option<String>
 }
 
-#[get("/vendor/{vendor_url}")]
+#[get("/user/vendors/{vendor_url}")]
 pub async fn route(
     db: web::Data<Database>,
     path: web::Path<String>

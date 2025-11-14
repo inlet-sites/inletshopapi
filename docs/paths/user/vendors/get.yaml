@@ -2,7 +2,7 @@ operationId: vendorGetFromUrl
 summary: Get Vendor
 security: []
 description: Retrieve public vendor information with their URL.
-tags: [Vendor]
+tags: [User Vendors]
 parameters:
   - name: vendor_url
     in: path
@@ -31,7 +31,7 @@ responses:
               type: string
               description: URL to be used for the business on site. For exampl, 'example-store' is available at https://inlet.shop/example-store
             public_data:
-              $ref: "../../components/schemas/publicData.yaml"
+              $ref: "#/components/schemas/PublicData"
             html:
               type: string
               description: An HTML page to display on the vendor's "About" page. This is for a custom page instead of the default.

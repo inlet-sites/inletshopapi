@@ -1,5 +1,5 @@
 operationId: vendorGetSelf
-summary: Get Vendor (self)
+summary: Me
 security:
   - VendorAuth: []
 description: Retrieve the data for the vendor. All of the data for the actual vendor to see, including private information.
