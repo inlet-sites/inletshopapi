@@ -5,7 +5,7 @@ use crate::{
     auth::vendor_auth
 };
 
-#[get("/vendor/self")]
+#[get("/vendor")]
 pub async fn route(
     db: web::Data<Database>,
     req: HttpRequest

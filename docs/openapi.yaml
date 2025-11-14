@@ -35,14 +35,14 @@ paths:
   /vendor/login:
     post:
       $ref: "./paths/vendor/login.yaml"
+  /vendor:
+    get:
+      $ref: "./paths/vendor/getSelf.yaml"
 
 
 
 
   # Vendor
-  /vendor/self:
-    get:
-      $ref: "./paths/vendor/getSelf.yaml"
   /vendor/{vendor_url}:
     get:
       $ref: "./paths/vendor/get.yaml"
