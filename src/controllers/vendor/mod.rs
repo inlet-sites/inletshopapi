@@ -4,7 +4,6 @@ pub mod change_password;
 pub mod login;
 pub mod get_vendor_self;
 pub mod get_vendor;
-pub mod get_all;
 pub mod update;
 pub mod update_image;
 pub mod password_email;

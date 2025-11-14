@@ -1,1 +1,1 @@
-pub mod get_many;
+pub mod vendors;

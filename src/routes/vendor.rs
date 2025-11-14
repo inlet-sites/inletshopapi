@@ -5,7 +5,6 @@ use crate::controllers::vendor::{
     login,
     get_vendor_self,
     get_vendor,
-    get_all,
     update,
     update_image,
     password_email,
@@ -20,7 +19,6 @@ pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.service(login::route);
     cfg.service(get_vendor_self::route);
     cfg.service(get_vendor::route);
-    cfg.service(get_all::route);
     cfg.service(update::route);
     cfg.service(update_image::route);
     cfg.service(password_email::route);
