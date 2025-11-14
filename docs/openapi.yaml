@@ -13,32 +13,43 @@ servers:
   - url: http://127.0.0.1:8001
     description: Development server
 
-tags:
-  - name: Vendor
-    description: Operations related to vendors
+x-tagGroups:
+  - name: User Actions
+    tags:
+      - Vendors
+  - name: Vendor Actions
+    tags:
+      - Vendor
   - name: Product
-    description: Operations related to vendor products
+    tags:
+      - Product
+
 
 paths:
-  # Vendor
-  /vendor/{vendor_id}/password/{token}:
-    put:
-      $ref: "./paths/vendor/createPassword.yaml"
+  #Vendor
   /vendor/password:
+    post:
+      $ref: "./paths/vendor/createPassword.yaml"
     put:
       $ref: "./paths/vendor/changePassword.yaml"
   /vendor/login:
     post:
       $ref: "./paths/vendor/login.yaml"
+
+
+
+
+  # Vendor
   /vendor/self:
     get:
       $ref: "./paths/vendor/getSelf.yaml"
   /vendor/{vendor_url}:
     get:
       $ref: "./paths/vendor/get.yaml"
-  /vendor:
+  /user/vendors:
     get:
-      $ref: "./paths/vendor/getAll.yaml"
+      $ref: "./paths/vendor/get_many.yaml"
+  /vendors:
     put:
       $ref: "./paths/vendor/update.yaml"
   /vendor/image:

@@ -1,4 +1,4 @@
-use actix_web::{HttpResponse, post, web, cookie::Cookie};
+use actix_web::{HttpResponse, post, web, cookie::{Cookie, SameSite}};
 use serde::Deserialize;
 use mongodb::Database;
 use crate::{
@@ -30,10 +30,20 @@ pub async fn route(
 }
 
 fn set_auth_cookie(id: String) -> Cookie<'static> {
-    Cookie::build("vendor", id)
-        .path("/")
-        .http_only(true)
-        .finish()
+    if cfg!(debug_assertions){
+        Cookie::build("vendor", id)
+            .path("/")
+            .http_only(true)
+            .finish()
+    } else{
+        Cookie::build("vendor", id)
+            .domain(".inletsites.dev")
+            .path("/")
+            .same_site(SameSite::None)
+            .http_only(true)
+            .secure(true)
+            .finish()
+    }
 }
 
 #[cfg(test)]

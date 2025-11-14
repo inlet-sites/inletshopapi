@@ -2,7 +2,7 @@ operationId: vendorGetAll
 summary: Get Vendors
 security: []
 description: Retrieve a list of all vendors
-tags: [Vendor]
+tags: [User Vendors]
 responses:
   "200":
     description: Successfully retrieved list of all vendors

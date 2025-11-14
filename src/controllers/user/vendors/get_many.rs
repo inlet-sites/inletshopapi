@@ -31,7 +31,7 @@ struct ResponsePublicData {
     image: Option<String>
 }
 
-#[get("/vendor")]
+#[get("/user/vendors")]
 pub async fn route(
     db: web::Data<Database>
 ) -> Result<HttpResponse, AppError> {
