@@ -29,7 +29,10 @@ paths:
   #User
   /user/vendors/{vendor_url}:
     get:
-      $ref: "./paths/user/vendors/get.yaml"
+      $ref: "./paths/user/vendors/get_one.yaml"
+  /user/vendors:
+    get:
+      $ref: "./paths/user/vendors/get_many.yaml"
   #Vendor
   /vendor/password:
     post:
@@ -49,9 +52,6 @@ paths:
 
 
   # Vendor
-  /user/vendors:
-    get:
-      $ref: "./paths/vendor/get_many.yaml"
   /vendors:
     put:
       $ref: "./paths/vendor/update.yaml"

@@ -78,9 +78,16 @@ pub struct ResponseVendor {
 }
 
 impl Vendor {
-    pub async fn get_all(db: &Database, projection_doc: Document) -> Result<Vec<Document>, AppError> {
+    pub async fn get_many(
+        db: &Database,
+        projection_doc: Document,
+        page: u64,
+        results: i64
+    ) -> Result<Vec<Document>, AppError> {
         let cursor = db.collection::<Document>("vendors")
             .find(doc!{})
+            .skip(page)
+            .limit(results)
             .projection(projection_doc)
             .await?;
 

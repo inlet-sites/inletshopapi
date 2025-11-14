@@ -14,6 +14,12 @@ use crate::{
 #[cfg(test)]
 use mongodb::bson::oid::ObjectId;
 
+#[derive(Deserialize)]
+struct Parameters {
+    page: Option<u64>,
+    results: Option<i64>
+}
+
 #[derive(Serialize, Deserialize)]
 struct ResponseVendor {
     id: String,
@@ -33,11 +39,17 @@ struct ResponsePublicData {
 
 #[get("/user/vendors")]
 pub async fn route(
-    db: web::Data<Database>
+    db: web::Data<Database>,
+    query: web::Query<Parameters>
 ) -> Result<HttpResponse, AppError> {
     //Gather data
     let projection_doc = create_projection_document();
-    let vendors = Vendor::get_all(&db, projection_doc).await?;
+    let vendors = Vendor::get_many(
+        &db,
+        projection_doc,
+        query.page.unwrap_or(0),
+        get_results_count(query.results.unwrap_or(50))
+    ).await?;
 
     let response = create_response(vendors);
     
@@ -78,6 +90,18 @@ fn create_response(vendors: Vec<Document>) -> Vec<ResponseVendor> {
             }
         }
     }).collect()
+}
+
+fn get_results_count(n: i64) -> i64 {
+    if n < 10 {
+        return 10;
+    }
+
+    if n > 100 {
+        return 100;
+    }
+
+    n
 }
 
 #[cfg(test)]
@@ -154,5 +178,24 @@ mod tests {
             result[3].public_data.as_ref().unwrap().image.as_ref().unwrap(),
             &value_two
         );
+    }
+
+    //get_results_count
+    #[test]
+    fn results_count_is_good() {
+        let result = get_results_count(55);
+        assert_eq!(result, 55);
+    }
+
+    #[test]
+    fn results_count_is_low() {
+        let result = get_results_count(3);
+        assert_eq!(result, 10);
+    }
+
+    #[test]
+    fn results_count_is_high() {
+        let result = get_results_count(199);
+        assert_eq!(result, 100);
     }
 }
