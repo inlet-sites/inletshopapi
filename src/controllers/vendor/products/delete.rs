@@ -9,7 +9,7 @@ use crate::{
     models::product::Product
 };
 
-#[delete("/product/{product_id}")]
+#[delete("/vendor/products/{product_id}")]
 pub async fn route(
     db: web::Data<Database>,
     path: web::Path<String>,

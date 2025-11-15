@@ -3,7 +3,7 @@ summary: Delete Product
 security:
   - VendorAuth: []
 description: Delete a product. For the purpose of records, the product is not truly deleted, just marked as archived.
-tags: [Product]
+tags: [Vendor Products]
 parameters:
   - name: product_id
     in: path
@@ -25,10 +25,10 @@ responses:
               description: Always true
               example: true
   "400":
-    $ref: "../../components/responses/400.yaml"
+    $ref: "#/components/responses/400"
   "401":
-    $ref: "../../components/responses/401.yaml"
+    $ref: "#/components/responses/401"
   "403":
-    $ref: "../../components/responses/403.yaml"
+    $ref: "#/components/responses/403"
   "500":
-    $ref: "../../components/responses/500.yaml"
+    $ref: "#/components/responses/500"
