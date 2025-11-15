@@ -51,6 +51,9 @@ paths:
   /vendor/thumbnail:
     put:
       $ref: "./paths/vendor/update_thumbnail.yaml"
+  /vendor/password/reset:
+    post:
+      $ref: "./paths/vendor/password_email.yaml"
 
 
 
@@ -58,12 +61,9 @@ paths:
 
 
   # Vendor
-  /vendor/password/email:
-    post:
-      $ref: "./paths/vendor/passwordEmail.yaml"
-  /vendor/password/reset:
-    post:
-      $ref: "./paths/vendor/resetPassword.yaml"
+  #/vendor/password/reset:
+  #  post:
+  #    $ref: "./paths/vendor/resetPassword.yaml"
   /vendor/connect:
     post:
       $ref: "./paths/vendor/createConnect.yaml"

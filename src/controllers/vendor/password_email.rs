@@ -14,7 +14,7 @@ struct Body {
     email: String
 }
 
-#[post("/vendor/password/email")]
+#[post("/vendor/password/reset")]
 pub async fn route(
     db: web::Data<Database>,
     body: web::Json<Body>
