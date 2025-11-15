@@ -68,6 +68,8 @@ paths:
   /vendor/products:
     post:
       $ref: "./paths/vendor/products/create.yaml"
+    get:
+      $ref: "./paths/vendor/products/get_many.yaml"
   /vendor/products/{product_id}:
     delete:
       $ref: "./paths/vendor/products/delete.yaml"

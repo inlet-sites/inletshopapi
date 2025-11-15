@@ -1,0 +1,74 @@
+operationId: vendorProductsGetMany
+summary: Get Many Products
+security:
+  - VendorAuth: []
+description: Retrieve a list of the vendors own products
+tags: [Vendor Products]
+parameters:
+  - name: page
+    in: query
+    required: false
+    description: Page of results to display. 0 indexed.
+    schema:
+      type: integer
+      minimum: 0
+      default: 0
+  - name: results
+    in: query
+    required: false
+    description: Number of results to retrieve per page.
+    schema:
+      type: integer
+      minimum: 10
+      maximum: 100
+      default: 50
+responses:
+  "200":
+    description: Array of products that the vendor owns. Data returned is just for displaying a small card, not full data.
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: objectid
+                description: Unique ID of the product
+                example: 673236fbdb6c3d2f1f5b2e8c
+              name:
+                type: string
+                description: Name/title of the product
+              tags:
+                type: array
+                description: An array of strings for organizing products
+                items:
+                  type: string
+              thumbnail:
+                type: string
+                format: url
+                description: Link for the thumbnail image
+              price:
+                oneOf:
+                  - type: number
+                    description: Integer representing the price in cents.
+                  - type: array
+                    description: Array containing the highest and lowest price of the product in cents.
+                    items:
+                      type: number
+          example:
+            - id: 67323964a2c1f5a8e7d92b0e
+              name: Table
+              tags: ["furniture", "kitchen"]
+              thumbnail: "/documents/ac89feca-cf4d-4096-b2fe-ef6cc4c8db0b.avif"
+              price: 25000
+            - id: 67323964b8e17a4d32e2f1c9
+              name: Chair
+              tags: ["furniture", "living room"]
+              thumbnail: "/documents/a44431a2-b216-4a83-8450-e47a3ac02f0d.avif"
+              price: [5000, 10000]
+  "400":
+    $ref: "#/components/responses/400"
+  "500":
+    $ref: "#/components/responses/500"
