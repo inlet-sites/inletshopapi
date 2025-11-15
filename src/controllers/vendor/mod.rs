@@ -9,3 +9,5 @@ pub mod password_email;
 pub mod reset_password;
 pub mod create_connect;
 pub mod create_session;
+
+pub mod products;

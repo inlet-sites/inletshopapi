@@ -3,7 +3,7 @@ summary: Create Product
 security:
   - VendorAuth: []
 description: Create a new product for the vendor.
-tags: [Product]
+tags: [Vendor Products]
 requestBody:
   content:
     application/json:
@@ -74,12 +74,12 @@ responses:
     content:
       application/json:
         schema:
-          $ref: "../../components/schemas/product.yaml"
+          $ref: "#/components/schemas/Product"
   "400":
-    $ref: "../../components/responses/400.yaml"
+    $ref: "#/components/responses/400"
   "401":
-    $ref: "../../components/responses/401.yaml"
+    $ref: "#/components/responses/401"
   "403":
-    $ref: "../../components/responses/403.yaml"
+    $ref: "#/components/responses/403"
   "500":
-    $ref: "../../components/responses/500.yaml"
+    $ref: "#/components/responses/500"

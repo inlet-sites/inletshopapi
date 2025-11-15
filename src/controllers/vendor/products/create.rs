@@ -29,7 +29,7 @@ struct BodyPrice {
     purchase_option: PurchaseOption
 }
 
-#[post("/product")]
+#[post("/vendor/products")]
 pub async fn route(
     db: web::Data<Database>,
     body: web::Json<Body>,
