@@ -45,6 +45,9 @@ paths:
   /vendor/login:
     post:
       $ref: "./paths/vendor/login.yaml"
+  /vendor/logout:
+    post:
+      $ref: "./paths/vendor/logout.yaml"
   /vendor:
     get:
       $ref: "./paths/vendor/me.yaml"

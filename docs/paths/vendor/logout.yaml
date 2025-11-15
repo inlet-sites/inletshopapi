@@ -1,0 +1,19 @@
+operationId: vendorLogout
+summary: Logout
+security: []
+description: Remove the authentication cookie from the browser.
+tags: [Vendor]
+responses:
+  "200":
+    description: Auth cookie removed
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            success:
+              type: boolean
+              description: Always true
+              example: true
+  "500":
+    $ref: "#/components/responses/500"
