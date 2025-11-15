@@ -24,7 +24,6 @@ x-tagGroups:
     tags:
       - Product
 
-
 paths:
   #User
   /user/vendors/{vendor_url}:
@@ -59,16 +58,15 @@ paths:
   /vendor/connect:
     post:
       $ref: "./paths/vendor/create_connect.yaml"
-
-
-
-
-
-
-  # Vendor
-  /vendor/connect/session:
+  /vendor/connect/onboarding:
     post:
-      $ref: "./paths/vendor/createSession.yaml"
+      $ref: "./paths/vendor/create_session.yaml"
+
+
+
+
+
+
 
   # Product
   /product:

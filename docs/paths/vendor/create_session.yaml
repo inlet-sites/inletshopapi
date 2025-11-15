@@ -1,8 +1,8 @@
 operationId: createSession
-summary: Create Stripe Session
+summary: Stripe Onboarding Session
 security:
   - VendorAuth: []
-description: Create a Stripe account session for the user to use to set up their Stripe account.
+description: Create an Stripe Connect onboarding session for the vendor.
 tags: [Vendor]
 responses:
   "200":

@@ -5,7 +5,7 @@ use serde_json::{Value, json};
 use std::collections::HashMap;
 use crate::{app_error::AppError, auth::vendor_auth};
 
-#[post("/vendor/connect/session")]
+#[post("/vendor/connect/onboarding")]
 pub async fn route(
     db: web::Data<Database>,
     req: HttpRequest
