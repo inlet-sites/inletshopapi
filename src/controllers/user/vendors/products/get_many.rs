@@ -15,7 +15,7 @@ struct Parameters {
     results: Option<i64>
 }
 
-#[get("/vendor/{vendor_id}/product")]
+#[get("/user/vendors/{vendor_id}/products")]
 pub async fn route(
     db: web::Data<Database>,
     path: web::Path<String>,

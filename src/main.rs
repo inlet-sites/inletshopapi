@@ -45,7 +45,6 @@ async fn main() -> std::io::Result<()> {
             .configure(routes::other::config)
             .configure(routes::user::config)
             .configure(routes::vendor::config)
-            .configure(routes::product::config)
     })
         .bind(("0.0.0.0", 8001))?
         .run()

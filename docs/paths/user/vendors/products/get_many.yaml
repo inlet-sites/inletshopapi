@@ -1,7 +1,7 @@
-operationId: productGetFromVendor
+operationId: userVendorsProductsGetMany
 summary: Get Vendor Products
 description: Retrieve a list of vendor products for sale
-tags: [Product]
+tags: [User Vendors Products]
 parameters:
   - name: page
     in: query
@@ -11,20 +11,18 @@ parameters:
       type: integer
       minimum: 0
       default: 0
-    example: 1
   - name: results
     in: query
     required: false
-    description: Number of results to retrieve
+    description: Number of results to retrieve per page.
     schema:
       type: integer
       minimum: 10
       maximum: 100
       default: 50
-    example: 25
 responses:
   "200":
-    description: Array of products available for sale. Returns only necessary data.
+    description: Array of products available for sale. Data returned is just for displaying a small card, not full data.
     content:
       application/json:
         schema:
@@ -69,6 +67,6 @@ responses:
               thumbnail: "/documents/a44431a2-b216-4a83-8450-e47a3ac02f0d.avif"
               price: [5000, 10000]
   "400":
-    $ref: "../../components/responses/400.yaml"
+    $ref: "#/components/responses/400"
   "500":
-    $ref: "../../components/responses/500.yaml"
+    $ref: "#/components/responses/500"

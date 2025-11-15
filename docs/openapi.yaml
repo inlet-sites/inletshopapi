@@ -17,13 +17,11 @@ x-tagGroups:
   - name: User
     tags:
       - User Vendors
+      - User Vendors Products
   - name: Vendor
     tags:
       - Vendor
       - Vendor Products
-  - name: Product
-    tags:
-      - Product
 
 paths:
   #User
@@ -33,6 +31,10 @@ paths:
   /user/vendors:
     get:
       $ref: "./paths/user/vendors/get_many.yaml"
+  #User Vendors Products
+  /user/vendors/{vendor_id}/products:
+    get:
+      $ref: "./paths/user/vendors/products/get_many.yaml"
 
   #Vendor
   /vendor/password:
@@ -69,17 +71,6 @@ paths:
   /vendor/products/{product_id}:
     delete:
       $ref: "./paths/vendor/products/delete.yaml"
-
-
-
-
-
-
-
-  # Product
-  /vendor/{vendor_id}/product:
-    get:
-      $ref: "./paths/product/getVendorProducts.yaml"
 
 components:
   schemas:
