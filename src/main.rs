@@ -10,6 +10,7 @@ mod app_error;
 mod auth;
 mod emails;
 mod dto;
+mod helpers;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

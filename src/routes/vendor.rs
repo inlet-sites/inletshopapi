@@ -28,4 +28,5 @@ pub fn config(cfg: &mut web::ServiceConfig) {
 
     cfg.service(products::create::route);
     cfg.service(products::delete::route);
+    cfg.service(products::get_many::route);
 }
