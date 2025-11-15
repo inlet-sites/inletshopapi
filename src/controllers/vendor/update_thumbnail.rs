@@ -35,7 +35,7 @@ impl Body {
     }
 }
 
-#[put("/vendor/image")]
+#[put("/vendor/thumbnail")]
 pub async fn route(
     db: web::Data<Database>,
     payload: Multipart,

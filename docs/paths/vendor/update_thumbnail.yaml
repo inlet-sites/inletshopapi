@@ -1,5 +1,5 @@
-operationId: vendorUpdateImage
-summary: Update Image
+operationId: vendorUpdateThumbnail
+summary: Update Thumbnail
 security:
   - VendorAuth: []
 description: Update the image for the vendor profile
