@@ -1,5 +1,5 @@
 operationId: vendorUpdate
-summary: Update vendor
+summary: Update
 security:
   - VendorAuth: []
 description: Update data on the vendor, including public facing data. All fields are optional.

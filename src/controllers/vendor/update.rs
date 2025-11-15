@@ -77,9 +77,7 @@ fn create_update_doc(body: Body) -> Document {
     let mut doc = Document::new();
 
     if let Some(stripe_activated) = body.stripe_activated {
-        let mut stripe_doc = Document::new();
-        stripe_doc.insert("activated", stripe_activated);
-        doc.insert("stripe", stripe_doc);
+        doc.insert("stripe.activated", stripe_activated);
     }
 
     if let Some(new_order_send_email) = body.new_order_send_email {
@@ -87,14 +85,12 @@ fn create_update_doc(body: Body) -> Document {
     }
 
     if let Some(public_data) = body.public_data {
-        let mut public_data_doc = Document::new();
-
         if let Some(phone) = public_data.phone {
-            public_data_doc.insert("phone", phone);
+            doc.insert("public_data.phone", phone);
         }
 
         if let Some(email) = public_data.email {
-            public_data_doc.insert("email", email);
+            doc.insert("public_data.email", email);
         }
 
         if let Some(address) = public_data.address {
@@ -108,30 +104,28 @@ fn create_update_doc(body: Body) -> Document {
                 address_doc.insert("link", link);
             }
 
-            public_data_doc.insert("address", address_doc);
+            doc.insert("public_data.address", address_doc);
         }
 
         if let Some(slogan) = public_data.slogan {
-            public_data_doc.insert("slogan", slogan);
+            doc.insert("public_data.slogan", slogan);
         }
 
         if let Some(description) = public_data.description {
-            public_data_doc.insert("description", description);
+            doc.insert("public_data.description", description);
         }
 
         if let Some(hours) = public_data.hours {
-            public_data_doc.insert("hours", create_hours_doc(hours));
+            doc.insert("public_data.hours", create_hours_doc(hours));
         }
 
         if let Some(links) = public_data.links {
-            public_data_doc.insert("links", links);
+            doc.insert("public_data.links", links);
         }
 
         if let Some(website) = public_data.website {
-            public_data_doc.insert("website", website);
+            doc.insert("public_data.website", website);
         }
-
-        doc.insert("public_data", public_data_doc);
     }
 
     doc
@@ -203,15 +197,13 @@ mod tests {
 
         let doc = create_update_doc(body);
 
-        let stripe_doc = doc.get_document("stripe").unwrap();
-        assert_eq!(stripe_doc.get_bool("activated").unwrap(), true);
+        assert_eq!(doc.get_bool("stripe.activated").unwrap(), true);
 
-        let public_data_doc = doc.get_document("public_data").unwrap();
-        assert_eq!(public_data_doc.get_str("email").unwrap(), "test@inletsites.dev");
-        assert_eq!(public_data_doc.get_str("slogan").unwrap(), "A new slogan");
-        assert_eq!(public_data_doc.get_str("website").unwrap(), "https://inletsites.dev");
+        assert_eq!(doc.get_str("public_data.email").unwrap(), "test@inletsites.dev");
+        assert_eq!(doc.get_str("public_data.slogan").unwrap(), "A new slogan");
+        assert_eq!(doc.get_str("public_data.website").unwrap(), "https://inletsites.dev");
 
-        let hours_doc = public_data_doc.get_document("hours").unwrap();
+        let hours_doc = doc.get_document("public_data.hours").unwrap();
         let monday = hours_doc.get_array("monday").unwrap();
         assert_eq!(monday[0], "09:00".into());
         assert_eq!(monday[1], "17:00".into());

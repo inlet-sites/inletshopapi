@@ -17,7 +17,7 @@ x-tagGroups:
   - name: User
     tags:
       - User Vendors
-  - name: Vendor Actions
+  - name: Vendor
     tags:
       - Vendor
   - name: Product
@@ -45,6 +45,8 @@ paths:
   /vendor:
     get:
       $ref: "./paths/vendor/me.yaml"
+    put:
+      $ref: "./paths/vendor/update.yaml"
 
 
 
@@ -52,9 +54,6 @@ paths:
 
 
   # Vendor
-  /vendors:
-    put:
-      $ref: "./paths/vendor/update.yaml"
   /vendor/image:
     put:
       $ref: "./paths/vendor/updateImage.yaml"
