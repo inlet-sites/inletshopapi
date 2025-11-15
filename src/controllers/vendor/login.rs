@@ -50,7 +50,6 @@ fn set_auth_cookie(id: String) -> Cookie<'static> {
 mod tests {
     use super::*;
 
-    //set_auth_cookie
     #[test]
     fn cookie_correct_name() {
         let result = set_auth_cookie(String::from("12345"));

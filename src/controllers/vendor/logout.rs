@@ -26,3 +26,20 @@ fn create_removal_cookie() -> Cookie<'static> {
             .finish()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn cookie_correct_name() {
+        let result = create_removal_cookie();
+        assert_eq!(result.name(), "vendor");
+    }
+
+    #[test]
+    fn cookie_correct_value() {
+        let result = create_removal_cookie();
+        assert_eq!(result.value(), "");
+    }
+}
