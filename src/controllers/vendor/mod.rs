@@ -2,6 +2,7 @@ pub mod common;
 pub mod create_password;
 pub mod change_password;
 pub mod login;
+pub mod logout;
 pub mod me;
 pub mod update;
 pub mod update_thumbnail;
