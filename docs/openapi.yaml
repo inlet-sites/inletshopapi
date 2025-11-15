@@ -16,6 +16,7 @@ servers:
 x-tagGroups:
   - name: User
     tags:
+      - User Products
       - User Vendors
       - User Vendors Products
   - name: Vendor
@@ -31,6 +32,10 @@ paths:
   /user/vendors:
     get:
       $ref: "./paths/user/vendors/get_many.yaml"
+  #User Products
+  /user/products/{product_id}:
+    get:
+      $ref: "./paths/user/products/get_one.yaml"
   #User Vendors Products
   /user/vendors/{vendor_id}/products:
     get:

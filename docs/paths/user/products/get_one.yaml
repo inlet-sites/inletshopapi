@@ -1,0 +1,16 @@
+operationId: user_products_get_one
+summary: Get One
+security: []
+description: Get full details for a single product
+tags: [User Products]
+responses:
+  "200":
+    description: Single product with full details for user viewing
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/Product"
+  "404":
+    $ref: "#/components/responses/404"
+  "500":
+    $ref: "#/components/responses/500"
