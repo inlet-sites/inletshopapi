@@ -1,4 +1,4 @@
-use actix_web::{HttpResponse, web, post};
+use actix_web::{HttpResponse, web, put};
 use serde::Deserialize;
 use uuid::Uuid;
 use serde_json::json;
@@ -24,7 +24,7 @@ struct Body {
     confirm_password: String
 }
 
-#[post("/vendor/password/reset")]
+#[put("/vendor/password/reset")]
 pub async fn route(
     db: web::Data<Database>,
     body: web::Json<Body>
