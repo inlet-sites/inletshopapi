@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Serialize, Deserialize, de::DeserializeOwned};
 use mongodb::{
     Database,
     bson::{DateTime, Document, doc, oid::ObjectId}
@@ -61,12 +61,22 @@ impl Product {
         }
     }
 
-    pub async fn find_by_id(db: &Database, id: ObjectId) -> Result<Product, AppError> {
-        match db.collection::<Product>("products").find_one(doc!{"_id": id}).await {
-            Ok(Some(p)) => Ok(p),
-            Ok(None) => Err(AppError::not_found("Product with this ID does not exist")),
-            Err(e) => Err(AppError::Database(e.into()))
-        }
+    pub async fn find_by_id<P>(
+        db: &Database,
+        id: ObjectId,
+        proj: Document
+    ) -> Result<P, AppError> 
+    where
+        P: DeserializeOwned + Send + Sync + Unpin
+    {
+        match db.collection::<P>("products")
+            .find_one(doc!{"_id": id})
+            .projection(proj)
+            .await {
+                Ok(Some(p)) => Ok(p),
+                Ok(None) => Err(AppError::not_found("Product with this ID does not exist")),
+                Err(e) => Err(AppError::Database(e.into()))
+            }
     }
 
     pub async fn find_by_vendor(

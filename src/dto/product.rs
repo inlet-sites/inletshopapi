@@ -1,4 +1,5 @@
-use serde::Serialize;
+use serde::{Serialize, Deserialize};
+use mongodb::bson::{Document, doc, oid::ObjectId};
 use crate::models::product::{Product, PurchaseOption};
 
 #[derive(Serialize)]
@@ -49,6 +50,98 @@ impl VendorResponse {
                     archived: price.archived
                 })
                 .collect()
+        }
+    }
+}
+
+#[derive(Deserialize)]
+pub struct ProductDb {
+    _id: ObjectId,
+    vendor: ObjectId,
+    name: String,
+    tags: Vec<String>,
+    images: Vec<String>,
+    prices: Vec<PriceDb>
+}
+
+#[derive(Deserialize)]
+pub struct PriceDb {
+    _id: ObjectId,
+    descriptor: String,
+    price: i32,
+    quantity: i32,
+    shipping: i32,
+    images: Vec<String>,
+    purchase_option: PurOptDb
+}
+
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum PurOptDb {
+    Ship,
+    Buy,
+    List
+}
+
+#[derive(Serialize)]
+pub struct ProductResponse {
+    id: String,
+    vendor: String,
+    name: String,
+    tags: Vec<String>,
+    images: Vec<String>,
+    prices: Vec<PriceResponse>
+}
+
+#[derive(Serialize)]
+pub struct PriceResponse {
+    id: String,
+    descriptor: String,
+    price: i32,
+    quantity: i32,
+    shipping: i32,
+    images: Vec<String>,
+    purchase_option: PurOptDb
+}
+
+impl From<ProductDb> for ProductResponse {
+    fn from(p: ProductDb) -> Self {
+        ProductResponse {
+            id: p._id.to_string(),
+            vendor: p.vendor.to_string(),
+            name: p.name,
+            tags: p.tags,
+            images: p.images,
+            prices: p.prices.into_iter().map(|pr| {
+                PriceResponse {
+                    id: pr._id.to_string(),
+                    descriptor: pr.descriptor,
+                    price: pr.price,
+                    quantity: pr.quantity,
+                    shipping: pr.shipping,
+                    images: pr.images,
+                    purchase_option: pr.purchase_option
+                }
+            }).collect()
+        }
+    }
+}
+
+impl ProductDb {
+    pub fn projection() -> Document {
+        doc!{
+            "_id": 1,
+            "vendor": 1,
+            "name": 1,
+            "tags": 1,
+            "images": 1,
+            "prices._id": 1,
+            "prices.descriptor": 1,
+            "prices.price": 1,
+            "prices.quantity": 1,
+            "prices.shipping": 1,
+            "prices.images": 1,
+            "prices.purchase_option": 1
         }
     }
 }
