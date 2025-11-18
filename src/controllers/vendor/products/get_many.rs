@@ -6,7 +6,7 @@ use crate::{
     auth::vendor_auth,
     models::product::Product,
     helpers::results_per_page,
-    dto::short_product::ShortProductResponse
+    dto::product::{ProductShortDb, ProductShortResponse}
 };
 
 #[derive(Deserialize)]
@@ -24,16 +24,18 @@ pub async fn route(
     let vendor = vendor_auth(&db, &req).await?;
 
     let results_range = (10, 100);
-    let products = Product::find_by_vendor(
+    let products: Vec<ProductShortDb> = Product::find_by_vendor(
         &db,
         vendor._id,
+        ProductShortDb::projection(),
         query.page.unwrap_or(0),
         results_per_page(results_range.0, results_range.1, query.results.unwrap_or(50))
     ).await?;
 
-    let response_products: Vec<ShortProductResponse> = products
+    let response_products: Vec<ProductShortResponse> = products
         .into_iter()
-        .map(|p| ShortProductResponse::from_short_product(p)).collect();
+        .map(ProductShortResponse::from)
+        .collect();
 
     Ok(HttpResponse::Ok().json(response_products))
 }

@@ -9,7 +9,7 @@ use crate::{
     auth::vendor_auth,
     models::product::{Product, Price, PurchaseOption},
     models::vendor::Vendor,
-    dto::product::VendorResponse
+    dto::product::ProductVendorResponse
 };
 
 #[derive(Deserialize)]
@@ -38,7 +38,7 @@ pub async fn route(
     let vendor = vendor_auth(&db, &req).await?;
     let product = create_product(body.into_inner(), &vendor);
     product.insert(&db).await?;
-    Ok(HttpResponse::Ok().json(VendorResponse::from_vendor(product)))
+    Ok(HttpResponse::Ok().json(ProductVendorResponse::from(product)))
 }
 
 fn create_product(body: Body, vendor: &Vendor) -> Product {

@@ -3,31 +3,54 @@ use mongodb::bson::{Document, doc, oid::ObjectId};
 use crate::models::product::{Product, PurchaseOption};
 
 #[derive(Serialize)]
-pub struct VendorResponse {
-    pub id: String,
-    pub name: String,
-    pub tags: Vec<String>,
-    pub images: Vec<String>,
-    pub archived: bool,
-    pub created_at: String,
-    pub prices: Vec<VendorResponsePrice>
+pub struct ProductVendorDb {
+    _id: ObjectId,
+    name: String,
+    tags: Vec<String>,
+    images: Vec<String>,
+    archived: bool,
+    created_at: String,
+    prices: Vec<PriceVendorDb>
 }
 
 #[derive(Serialize)]
-pub struct VendorResponsePrice {
-    pub id: String,
-    pub descriptor: String,
-    pub price: i32,
-    pub quantity: i32,
-    pub shipping: i32,
-    pub images: Vec<String>,
-    pub purchase_option: String,
-    pub archived: bool
+struct PriceVendorDb {
+    _id: ObjectId,
+    descriptor: String,
+    price: i32,
+    quantity: i32,
+    shipping: i32,
+    images: Vec<String>,
+    purchase_option: PurchaseOption,
+    archived: bool
 }
 
-impl VendorResponse {
-    pub fn from_vendor(p: Product) -> VendorResponse {
-        VendorResponse {
+#[derive(Serialize)]
+pub struct ProductVendorResponse {
+    id: String,
+    name: String,
+    tags: Vec<String>,
+    images: Vec<String>,
+    archived: bool,
+    created_at: String,
+    prices: Vec<PriceVendorResponse>
+}
+
+#[derive(Serialize)]
+struct PriceVendorResponse {
+    id: String,
+    descriptor: String,
+    price: i32,
+    quantity: i32,
+    shipping: i32,
+    images: Vec<String>,
+    purchase_option: String,
+    archived: bool
+}
+
+impl From<Product> for ProductVendorResponse {
+    fn from(p:Product) -> ProductVendorResponse {
+        ProductVendorResponse {
             id: p._id.to_string(),
             name: p.name,
             tags: p.tags,
@@ -35,7 +58,7 @@ impl VendorResponse {
             archived: p.archived,
             created_at: p.created_at.to_string(),
             prices: p.prices.into_iter()
-                .map(|price| VendorResponsePrice {
+                .map(|price| PriceVendorResponse {
                     id: price._id.to_string(),
                     descriptor: price.descriptor,
                     price: price.price,
@@ -142,6 +165,82 @@ impl ProductDb {
             "prices.shipping": 1,
             "prices.images": 1,
             "prices.purchase_option": 1
+        }
+    }
+}
+
+#[derive(Deserialize)]
+pub struct ProductShortDb {
+    _id: ObjectId,
+    name: String,
+    tags: Vec<String>,
+    images: Vec<String>,
+    prices: Vec<PriceShortDb>
+}
+
+#[derive(Deserialize)]
+pub struct PriceShortDb {
+    price: i32
+}
+
+impl ProductShortDb {
+    pub fn projection() -> Document {
+        doc!{
+            "_id": 1,
+            "name:": 1,
+            "tags": 1,
+            "images": 1,
+            "prices.price": 1
+        }
+    }
+}
+
+#[derive(Serialize)]
+pub struct ProductShortResponse {
+    id: String,
+    name: String,
+    tags: Vec<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    image: Option<String>,
+    price: PriceShortResponse
+}
+
+#[derive(Serialize)]
+#[serde(untagged)]
+enum PriceShortResponse {
+    Single(i32),
+    Multi((i32, i32))
+}
+
+impl From<ProductShortDb> for ProductShortResponse {
+    fn from(p: ProductShortDb) -> Self {
+        let get_min_max_price = |p: Vec<PriceShortDb>| -> PriceShortResponse {
+            if p.len() == 1 {
+                PriceShortResponse::Single(p[0].price)
+            } else {
+                let mut results = (p[0].price, p[0].price);
+                for v in p {
+                    if v.price < results.0 {
+                        results.0 = v.price
+                    }
+                    if v.price > results.1 {
+                        results.1 = v.price
+                    }
+                }
+                PriceShortResponse::Multi(results)
+            }
+        };
+
+        ProductShortResponse {
+            id: p._id.to_string(),
+            name: p.name,
+            tags: p.tags,
+            image: if p.images.len() == 0 {
+                None
+            } else {
+                Some(p.images[0].clone())
+            },
+            price: get_min_max_price(p.prices)
         }
     }
 }

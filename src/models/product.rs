@@ -39,20 +39,6 @@ pub enum PurchaseOption {
     List
 }
 
-#[derive(Deserialize)]
-pub struct ShortProduct {
-    pub _id: ObjectId,
-    pub name: String,
-    pub tags: Vec<String>,
-    pub images: Vec<String>,
-    pub prices: Vec<ShortPrice>
-}
-
-#[derive(Deserialize)]
-pub struct ShortPrice {
-    pub price: i32
-}
-
 impl Product {
     pub async fn insert(&self, db: &Database) -> Result<(), AppError> {
         match db.collection::<Product>("products").insert_one(self).await {
@@ -79,28 +65,24 @@ impl Product {
             }
     }
 
-    pub async fn find_by_vendor(
+    pub async fn find_by_vendor<P>(
         db: &Database,
         vendor_id: ObjectId,
+        proj: Document,
         page: u64,
         results: i64
-    ) -> Result<Vec<ShortProduct>, AppError> {
-        let projection = doc!{
-            "_id": 1,
-            "name": 1,
-            "tags": 1,
-            "images": 1,
-            "prices.price": 1
-        };
-
-        let cursor = db.collection::<ShortProduct>("products")
+    ) -> Result<Vec<P>, AppError> 
+    where
+        P: DeserializeOwned + Send + Sync + Unpin
+    {
+        let cursor = db.collection::<P>("products")
             .find(doc!{"vendor": vendor_id})
-            .skip(page)
+            .skip(page * results as u64)
             .limit(results)
-            .projection(projection)
+            .projection(proj)
             .await?;
 
-        let products: Vec<ShortProduct> = cursor.try_collect().await?;
+        let products: Vec<P> = cursor.try_collect().await?;
         Ok(products)
     }
 
