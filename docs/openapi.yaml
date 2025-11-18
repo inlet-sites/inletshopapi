@@ -81,6 +81,8 @@ paths:
   /vendor/products/{product_id}:
     delete:
       $ref: "./paths/vendor/products/delete.yaml"
+    get:
+      $ref: "./paths/vendor/products/get_one.yaml"
 
 components:
   schemas:

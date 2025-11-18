@@ -1,0 +1,31 @@
+operationId: vendorProductsGetOne
+summary: Get One Product
+security:
+  - VendorAuth: []
+description: Retrieve full details for a single product owned by the vendor
+tags: [Vendor Products]
+parameters:
+  - name: product_id
+    in: path
+    required: true
+    description: ObjectId of the product to retrieve
+    schema:
+      type: string
+      format: ObjectId
+responses:
+  "200":
+    description: A single product with full details meant for the vendor.
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/Product"
+  "400":
+    $ref: "#/components/responses/400"
+  "401":
+    $ref: "#/components/responses/401"
+  "403":
+    $ref: "#/components/responses/403"
+  "404":
+    $ref: "#/components/responses/404"
+  "500":
+    $ref: "#/components/responses/500"
