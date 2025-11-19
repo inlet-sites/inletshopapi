@@ -76,7 +76,7 @@ impl Product {
         vendor_id: ObjectId,
         proj: Document,
         page: u64,
-        results: i64
+        results: u64
     ) -> Result<Vec<P>, AppError> 
     where
         P: DeserializeOwned + Send + Sync + Unpin
@@ -84,7 +84,7 @@ impl Product {
         let cursor = db.collection::<P>("products")
             .find(doc!{"vendor": vendor_id})
             .skip(page * results as u64)
-            .limit(results)
+            .limit(results as i64)
             .projection(proj)
             .await?;
 

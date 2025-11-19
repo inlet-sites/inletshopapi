@@ -1,4 +1,4 @@
-pub fn results_per_page(min: i64, max: i64, requested: i64) -> i64 {
+pub fn results_per_page(min: u64, max: u64, requested: u64) -> u64 {
     if requested > max {
         return max;
     }

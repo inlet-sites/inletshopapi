@@ -14,7 +14,7 @@ use crate::{
 #[derive(Deserialize)]
 struct Parameters {
     page: Option<u64>,
-    results: Option<i64>
+    results: Option<u64>
 }
 
 #[get("/user/vendors/{vendor_id}/products")]

@@ -12,7 +12,7 @@ use crate::{
 #[derive(Deserialize)]
 struct Parameters {
     page: Option<u64>,
-    results: Option<i64>
+    results: Option<u64>
 }
 
 #[get("/vendor/products")]
@@ -23,19 +23,18 @@ pub async fn route(
 ) -> Result<HttpResponse, AppError> {
     let vendor = vendor_auth(&db, &req).await?;
 
-    let results_range = (10, 100);
-    let products: Vec<ProductShortDb> = Product::find_by_vendor(
+    let results_range: (u64, u64) = (10, 100);
+    let result = Product::find_by_vendor::<ProductShortDb>(
         &db,
         vendor._id,
         ProductShortDb::projection(),
         query.page.unwrap_or(0),
         results_per_page(results_range.0, results_range.1, query.results.unwrap_or(50))
-    ).await?;
-
-    let response_products: Vec<ProductShortResponse> = products
+    )
+        .await?
         .into_iter()
         .map(ProductShortResponse::from)
         .collect();
 
-    Ok(HttpResponse::Ok().json(response_products))
+    Ok(HttpResponse::Ok().json(products))
 }

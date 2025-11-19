@@ -230,7 +230,7 @@ impl ProductShortDb {
     pub fn projection() -> Document {
         doc!{
             "_id": 1,
-            "name:": 1,
+            "name": 1,
             "tags": 1,
             "images": 1,
             "prices.price": 1
