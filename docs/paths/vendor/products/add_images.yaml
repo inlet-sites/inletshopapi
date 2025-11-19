@@ -1,0 +1,54 @@
+operationId: vendorProductsAddImages
+summary: Add Images
+security:
+  - VendorAuth: []
+description: Add one or more images to list of product images.
+tags: [Vendor Products]
+parameters:
+  - name: product_id
+    in: path
+    required: true
+    description: ObjectId of the product to add images to.
+    schema:
+      type: String
+      format: objectid
+      example: 68fcb9c63e2a4fcd9a8a1d92
+requestBody:
+  content:
+    multipart/form-data:
+      schema:
+        type: object
+        properties:
+          images:
+            type: array
+            items:
+              type: string
+              format: binary
+            description: List of images to add to product
+          required:
+            - images
+responses:
+  "200":
+    description: All images uploaded successfully
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            type: string
+            format: url
+            description: URL of image. Add 'https://api.inlet.shop/inletshop/' to the front.
+            example: vendor-68fcbad8db2a4e6d9c4c83f1/598746bc-4250-4e7a-9f84-e2c6b037d173.avif
+          description: List containing links to the uploaded photos
+  "400":
+    $ref: "#/components/responses/400"
+  "401":
+    $ref: "#/components/responses/401"
+  "403":
+    $ref: "#/components/responses/403"
+  "404":
+    $ref: "#/components/responses/404"
+  "500":
+    $ref: "#/components/responses/500"
+
+          

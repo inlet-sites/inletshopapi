@@ -83,6 +83,9 @@ paths:
       $ref: "./paths/vendor/products/delete.yaml"
     get:
       $ref: "./paths/vendor/products/get_one.yaml"
+  /vendor/products/{product_id}/images:
+    post:
+      $ref: "./paths/vendor/products/add_images.yaml"
 
 components:
   schemas:

@@ -11,6 +11,7 @@ parameters:
     description: ObjectId of the product to be deleted.
     schema:
       type: string
+      format: objectid
       example: 67322af7d3e6b0b3a4c4df18
 responses:
   "200":
