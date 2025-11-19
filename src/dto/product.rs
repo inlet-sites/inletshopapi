@@ -218,6 +218,7 @@ pub struct ProductShortDb {
     name: String,
     tags: Vec<String>,
     images: Vec<String>,
+    thumbnail_index: Option<u32>,
     prices: Vec<PriceShortDb>
 }
 
@@ -233,6 +234,7 @@ impl ProductShortDb {
             "name": 1,
             "tags": 1,
             "images": 1,
+            "thumbnail_index": 1,
             "prices.price": 1
         }
     }
@@ -280,6 +282,8 @@ impl From<ProductShortDb> for ProductShortResponse {
             tags: p.tags,
             image: if p.images.len() == 0 {
                 None
+            } else if let Some(idx) = p.thumbnail_index {
+                Some(p.images[idx as usize].clone())
             } else {
                 Some(p.images[0].clone())
             },

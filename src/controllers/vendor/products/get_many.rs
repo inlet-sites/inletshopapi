@@ -24,7 +24,7 @@ pub async fn route(
     let vendor = vendor_auth(&db, &req).await?;
 
     let results_range: (u64, u64) = (10, 100);
-    let result = Product::find_by_vendor::<ProductShortDb>(
+    let products: Vec<ProductShortResponse> = Product::find_by_vendor::<ProductShortDb>(
         &db,
         vendor._id,
         ProductShortDb::projection(),
