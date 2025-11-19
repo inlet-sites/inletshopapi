@@ -2,7 +2,7 @@ use serde::{Serialize, Deserialize};
 use mongodb::bson::{Document, doc, oid::ObjectId};
 use crate::models::product::{Product, PurchaseOption};
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 pub struct ProductVendorDb {
     _id: ObjectId,
     name: String,
@@ -13,7 +13,7 @@ pub struct ProductVendorDb {
     prices: Vec<PriceVendorDb>
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 struct PriceVendorDb {
     _id: ObjectId,
     descriptor: String,
@@ -25,7 +25,21 @@ struct PriceVendorDb {
     archived: bool
 }
 
-#[derive(Serialize)]
+impl ProductVendorDb {
+    pub fn projection() -> Document {
+        doc!{
+            "_id": 1,
+            "name": 1,
+            "tags": 1,
+            "images": 1,
+            "archived": 1,
+            "created_at": 1,
+            "prices": 1
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize)]
 pub struct ProductVendorResponse {
     id: String,
     name: String,
@@ -36,7 +50,7 @@ pub struct ProductVendorResponse {
     prices: Vec<PriceVendorResponse>
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 struct PriceVendorResponse {
     id: String,
     descriptor: String,
@@ -48,8 +62,37 @@ struct PriceVendorResponse {
     archived: bool
 }
 
+impl From<ProductVendorDb> for ProductVendorResponse {
+    fn from(p: ProductVendorDb) -> ProductVendorResponse {
+        ProductVendorResponse {
+            id: p._id.to_string(),
+            name: p.name,
+            tags: p.tags,
+            images: p.images,
+            archived: p.archived,
+            created_at: p.created_at.to_string(),
+            prices: p.prices.into_iter()
+                .map(|price| PriceVendorResponse {
+                    id: price._id.to_string(),
+                    descriptor: price.descriptor,
+                    price: price.price,
+                    quantity: price.quantity,
+                    shipping: price.shipping,
+                    images: price.images,
+                    purchase_option: match price.purchase_option {
+                        PurchaseOption::Ship => String::from("ship"),
+                        PurchaseOption::Buy => String::from("buy"),
+                        PurchaseOption::List => String::from("list")
+                    },
+                    archived: price.archived
+                })
+                .collect()
+        }
+    }
+}
+
 impl From<Product> for ProductVendorResponse {
-    fn from(p:Product) -> ProductVendorResponse {
+    fn from(p: Product) -> ProductVendorResponse {
         ProductVendorResponse {
             id: p._id.to_string(),
             name: p.name,

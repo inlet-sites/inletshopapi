@@ -13,10 +13,13 @@ pub async fn route(
 ) -> Result<HttpResponse, AppError> {
     let id = ObjectId::parse_str(path.into_inner())
         .map_err(|_| AppError::invalid_input("Invalid product ID"))?;
-    
-    let product: ProductDb = Product::find_by_id(&db, id, ProductDb::projection()).await?;
-    let response: ProductResponse = product.into();
+    let product: ProductResponse = Product::find_by_id::<ProductDb>(
+        &db,
+        id,
+        None,
+        ProductDb::projection(),
+    ).await?.into();
 
-    Ok(HttpResponse::Ok().json(response))
+    Ok(HttpResponse::Ok().json(product))
 }
 

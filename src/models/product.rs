@@ -50,13 +50,19 @@ impl Product {
     pub async fn find_by_id<P>(
         db: &Database,
         id: ObjectId,
+        vendor: Option<ObjectId>,
         proj: Document
     ) -> Result<P, AppError> 
-    where
-        P: DeserializeOwned + Send + Sync + Unpin
+        where
+            P: DeserializeOwned + Send + Sync + Unpin
     {
+        let find_doc = match vendor {
+            Some(v) => doc!{"_id": id, "vendor": v},
+            None => doc!{"_id": id}
+        };
+
         match db.collection::<P>("products")
-            .find_one(doc!{"_id": id})
+            .find_one(find_doc)
             .projection(proj)
             .await {
                 Ok(Some(p)) => Ok(p),
@@ -86,18 +92,11 @@ impl Product {
         Ok(products)
     }
 
-    pub async fn update(&self, db: &Database, update_doc: Document) -> Result<Product, AppError> {
-        match db.collection::<Product>("products").find_one_and_update(doc!{"_id": self._id}, doc!{"$set": update_doc}).await? {
-            Some(p) => Ok(p),
-            None => Err(AppError::not_found("Product with this ID does not exist"))
-        }
-    }
-
-    pub fn is_owned(&self, vendor_id: &ObjectId) -> Result<(), AppError> {
-        if self.vendor == *vendor_id {
-            Ok(())
-        } else {
-            Err(AppError::forbidden("Unauthorized to edit this product"))
+    pub async fn delete(db: &Database, id: ObjectId, vendor: ObjectId) -> Result<(), AppError> {
+        match db.collection::<Product>("products").find_one_and_delete(doc!{"_id": id, "vendor": vendor}).await {
+            Ok(Some(_)) => Ok(()),
+            Ok(None) => Err(AppError::forbidden("You do not have authorization for this product")),
+            Err(e) => Err(AppError::Database(e.into()))
         }
     }
 }
