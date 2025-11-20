@@ -93,11 +93,40 @@ impl Product {
         Ok(products)
     }
 
+    pub async fn update(
+        db: &Database,
+        product_id: ObjectId,
+        vendor_id: Option<ObjectId>,
+        updates: Document
+    ) -> Result<(), AppError> {
+        let filter = match vendor_id {
+            Some(v) => doc!{"_id": product_id, "vendor": v},
+            None => doc!{"_id": product_id}
+        };
+
+        match db.collection::<Product>("products").update_one(filter, updates).await {
+            Ok(ur) if ur.matched_count == 1 => Ok(()),
+            Ok(_) => Err(AppError::forbidden("You do not have permissions for this product")),
+            Err(e) => Err(AppError::Database(e.into()))
+        }
+    }
+
     pub async fn delete(db: &Database, id: ObjectId, vendor: ObjectId) -> Result<(), AppError> {
         match db.collection::<Product>("products").find_one_and_delete(doc!{"_id": id, "vendor": vendor}).await {
             Ok(Some(_)) => Ok(()),
             Ok(None) => Err(AppError::forbidden("You do not have authorization for this product")),
             Err(e) => Err(AppError::Database(e.into()))
         }
+    }
+
+    pub async fn verify_ownership(db: &Database, product_id: ObjectId, vendor_id: ObjectId) -> Result<(), AppError> {
+        match db.collection::<Document>("products")
+            .find_one(doc!{"_id": product_id, "vendor": vendor_id})
+            .projection(doc!{"_id": 1})
+            .await {
+                Ok(Some(_)) => Ok(()),
+                Ok(None) => Err(AppError::forbidden("You do not have authorization for this product")),
+                Err(e) => Err(AppError::Database(e.into()))
+            }
     }
 }
