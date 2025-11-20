@@ -28,18 +28,17 @@ requestBody:
           required:
             - images
 responses:
-  "200":
-    description: All images uploaded successfully
+  "202":
+    description: Image processing in progress
     content:
       application/json:
         schema:
-          type: array
-          items:
-            type: string
-            format: url
-            description: URL of image. Add 'https://api.inlet.shop/inletshop/' to the front.
-            example: vendor-68fcbad8db2a4e6d9c4c83f1/598746bc-4250-4e7a-9f84-e2c6b037d173.avif
-          description: List containing links to the uploaded photos
+          type: object
+          properties:
+            success:
+              type: boolean
+              description: Always true
+              example: true
   "400":
     $ref: "#/components/responses/400"
   "401":
