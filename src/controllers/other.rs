@@ -18,10 +18,15 @@ pub async fn documentation_route() -> Result<HttpResponse, AppError> {
 
 #[get("/documents/{tail:.*}")]
 pub async fn documents_route(path: web::Path<String>) -> Result<HttpResponse, AppError> {
-    let base = Path::new("/srv/inletshop");
+    let home = std::env::var("HOME_DIR").expect("HOME_DIR not set");
+    let base_dir = format!("{}srv/", home);
+    let base = Path::new(&base_dir);
     let full_path = base.join(path.into_inner())
         .canonicalize()
-        .map_err(|_| AppError::not_found("Invalid path"))?;
+        .map_err(|e| {
+            eprintln!("{:?}", e);
+            AppError::not_found("Invalid path")
+        })?;
 
     if !full_path.starts_with(base) {
         return Err(AppError::not_found("Invalid path"));
