@@ -100,7 +100,7 @@ pub async fn route(
         }
     });
 
-    Ok(HttpResponse::Ok().body("processing images"))
+    Ok(HttpResponse::Accepted().json(doc!{"success": true}))
 }
 
 fn create_update_doc(urls: Vec<String>) -> Document {
