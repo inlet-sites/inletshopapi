@@ -12,7 +12,7 @@ use crate::{
 
 #[derive(MultipartForm)]
 struct Body {
-    #[multipart(limit = "15MB")]
+    #[multipart(limit = "50MB")]
     images: Vec<TempFile>
 }
 
@@ -28,10 +28,6 @@ pub async fn route(
     MultipartForm(body): MultipartForm<Body>,
     req: HttpRequest
 ) -> Result<HttpResponse, AppError> {
-    if body.images.len() > 15 {
-        return Err(AppError::invalid_input("Exceeds 10 image maximum."));
-    }
-
     let vendor = vendor_auth(&db, &req).await?;
     let product_id = ObjectId::parse_str(path.into_inner().product_id)
         .map_err(|_| AppError::invalid_input("Invalid product id"))?;
