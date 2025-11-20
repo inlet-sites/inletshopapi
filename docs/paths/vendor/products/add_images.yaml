@@ -10,7 +10,7 @@ parameters:
     required: true
     description: ObjectId of the product to add images to.
     schema:
-      type: String
+      type: string
       format: objectid
       example: 68fcb9c63e2a4fcd9a8a1d92
 requestBody:
@@ -24,9 +24,9 @@ requestBody:
             items:
               type: string
               format: binary
-            description: List of images to add to product
-          required:
-            - images
+            description: "List of images to add to product (Max total payload: 50MB)"
+        required:
+          - images
 responses:
   "202":
     description: Image processing in progress
