@@ -110,3 +110,21 @@ fn create_update_doc(urls: Vec<String>) -> Document {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn valid_doc() {
+        let urls = vec![String::from("route/to/image")];
+        let expected: Document = doc! {
+            "$push": {
+                "images": {"$each": urls.clone()}
+            }
+        };
+        let result = create_update_doc(urls);
+
+        assert_eq!(result, expected);
+    }
+}
