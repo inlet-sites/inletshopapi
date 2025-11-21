@@ -14,6 +14,7 @@ parameters:
       format: objectid
       example: 68fcb9c63e2a4fcd9a8a1d92
 requestBody:
+  required: true
   content:
     multipart/form-data:
       schema:
@@ -25,8 +26,19 @@ requestBody:
               type: string
               format: binary
             description: "List of images to add to product (Max total payload: 50MB)"
+          ids:
+            type: array
+            items:
+              type: string
+              format: uuid
+            description: UUIDs generated on the front-end for each image
+          thumbnail:
+            type: string
+            nullable: true
+            description: UUID of the image to be used as the thumbnail
         required:
           - images
+          - ids
 responses:
   "202":
     description: Image processing in progress
