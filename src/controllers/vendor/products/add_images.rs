@@ -1,5 +1,5 @@
 use actix_web::{HttpResponse, HttpRequest, web, post};
-use actix_multipart::form::{MultipartForm, tempfile::TempFile};
+use actix_multipart::form::{MultipartForm, tempfile::TempFile, text::Text};
 use serde::Deserialize;
 use mongodb::{Database, bson::{Document, doc, oid::ObjectId}};
 use uuid::Uuid;
@@ -13,7 +13,11 @@ use crate::{
 #[derive(MultipartForm)]
 struct Body {
     #[multipart(limit = "50MB")]
-    images: Vec<TempFile>
+    #[multipart(rename = "images")]
+    images: Vec<TempFile>,
+    #[multipart(rename = "id")]
+    ids: Vec<Text<String>>,
+    thumbnail: Option<Text<String>>
 }
 
 #[derive(Deserialize)]
@@ -40,17 +44,15 @@ pub async fn route(
         let mut handles = Vec::new();
         let home = std::env::var("HOME_DIR").expect("HOME_DIR not set");
 
-        for image in body.images {
+        for (image, id) in body.images.into_iter().zip(body.ids.into_iter()) {
             let temp_filename = format!("/tmp/{}.upload", Uuid::new_v4());
             image.file.persist(&temp_filename).expect("Failed to persist uploaded file");
-
-            let id = Uuid::new_v4().to_string();
 
             let url = format!(
                 "/vendor-{}/product-{}/{}.avif",
                 vendor._id.to_string(),
                 product_id.to_string(),
-                id
+                id.into_inner()
             );
 
             let base_dir = format!("{}srv", home);
@@ -82,7 +84,18 @@ pub async fn route(
         }
 
         if !urls.is_empty() {
-            match Product::update(&db, product_id, Some(vendor_id), create_update_doc(urls.clone())).await {
+            let thumbnail_url = create_thumbnail_url(
+                body.thumbnail,
+                home,
+                vendor._id.to_string(),
+                product_id.to_string()
+            );
+            match Product::update(
+                &db,
+                product_id,
+                Some(vendor_id),
+                create_update_doc(urls.clone(), thumbnail_url)
+            ).await {
                 Ok(_) => (),
                 Err(_) => {
                     for u in urls {
@@ -99,11 +112,31 @@ pub async fn route(
     Ok(HttpResponse::Accepted().json(doc!{"success": true}))
 }
 
-fn create_update_doc(urls: Vec<String>) -> Document {
-    doc!{
-        "$push": {
-            "images": {"$each": urls}
-        }
+fn create_thumbnail_url(
+    uuid: Option<Text<String>>,
+    home: String,
+    vendor_id: String,
+    product_id: String
+) -> Option<String> {
+    match uuid {
+        Some(u) => Some(format!(
+            "{}srv/vendor-{}/product-{}/{}.avif",
+            home,
+            vendor_id,
+            product_id,
+            u.into_inner()
+        )),
+        None => None
+    }
+}
+
+fn create_update_doc(urls: Vec<String>, thumbnail: Option<String>) -> Document {
+    match thumbnail {
+        Some(t) => doc!{
+            "$push": {"images": {"$each": urls}},
+            "$set": {"thumbnail": t}
+        },
+        None => doc!{"$push": {"images": {"$each": urls}}}
     }
 }
 

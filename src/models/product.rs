@@ -13,7 +13,7 @@ pub struct Product {
     pub name: String,
     pub tags: Vec<String>,
     pub images: Vec<String>,
-    pub thumbnail_index: Option<u32>,
+    pub thumbnail: Option<String>,
     pub active: bool,
     pub archived: bool,
     pub created_at: DateTime,

@@ -48,7 +48,7 @@ fn create_product(body: Body, vendor: &Vendor) -> Product {
         name: body.name,
         tags: body.tags,
         images: Vec::new(),
-        thumbnail_index: None,
+        thumbnail: None,
         active: true,
         archived: body.archived,
         created_at: DateTime::now(),
