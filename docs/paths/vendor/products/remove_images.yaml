@@ -1,0 +1,45 @@
+operationId: vendorProductRemoveImages
+summary: Remove Images
+security:
+  - VendorAuth: []
+description: Remove a list of images from a vendors product
+tags: [Vendor Products]
+parameters:
+  - name: product_id
+    id: path
+    required: true
+    description: ObjectId of the product
+    schema:
+      type: string
+      format: objectid
+      example: 68fdeb2e9b3a4c7f12d8e905
+requestBody:
+  content:
+    application/json:
+      schema:
+        type: array
+        items:
+          type: string
+          format: url
+          description: URL of the images to remove from the product
+          example: vendor-68ee98af7979fae11ece5f48/product-691e10b30bfc22e93b556b96/45264a88-7ea9-4f69-9e61-84a5bfda5b19.avif
+responses:
+  "200":
+    description: Images successfully deleted
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            success:
+              type: boolean
+              description: Always true
+              example: true
+  "400":
+    $ref: "#/components/responses/400"
+  "401":
+    $ref: "#/components/responses/401"
+  "403":
+    $ref: "#/components/responses/403"
+  "500":
+    $ref: "#/components/responses/500"
