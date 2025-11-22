@@ -1,0 +1,52 @@
+operationId: vendorProductUpdate
+summary: Update Product
+security:
+  - VendorAuth: []
+description: Update a product.
+tags: [Vendor Products]
+parameters:
+  - name: product_id
+    in: path
+    required: true
+    description: ObjectId of the product to update
+    schema:
+      type: string
+      format: objectid
+      example: 6928586fa6f1a7dd0f92cf12
+requestBody:
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          name:
+            type: string
+            description: Name of the product
+            example: Table
+          tags:
+            type: array
+            description: List of tags for grouping the item
+            example: ["furniture", "kitchen"]
+            items:
+              type: string
+          thumbnail:
+            type: string
+            format: url
+            description: URL of the image to be used as the main thumbnail for the product.
+            example: /vendor-68ee98af7979fae11ece5f48/product-691e10b30bfc22e93b556b96/5b24ef96-6f8d-467d-bfb7-02294a70f868.avif
+responses:
+  "200":
+    description: Full vendor with updated data
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/Product"
+  "400":
+    $ref: "#/components/responses/400"
+  "401":
+    $ref: "#/components/responses/401"
+  "403":
+    $ref: "#/components/responses/403"
+  "500":
+    $ref: "#/components/responses/500"
+

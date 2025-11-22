@@ -27,6 +27,11 @@ properties:
       type: string
       format: url
     example: ["/documents/8d34b52d-30a2-42f7-b9a3-1fa40d2188d2.avif"]
+  thumbnail:
+    type: string
+    format: url
+    description: URL to the thumbnail image for the product.
+    example: /vendor-68ee98af7979fae11ece5f48/product-691e10b30bfc22e93b556b96/5b24ef96-6f8d-467d-bfb7-02294a70f868.avif
   active:
     type: boolean
     description: Flag used by developers for removing the item from display if necessary.
