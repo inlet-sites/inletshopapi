@@ -3,10 +3,11 @@ use actix_multipart::form::{MultipartForm, tempfile::TempFile, text::Text};
 use serde::Deserialize;
 use mongodb::{Database, bson::{Document, doc, oid::ObjectId}};
 use uuid::Uuid;
+use futures::future::join_all;
 use crate::{
     app_error::AppError,
     auth::vendor_auth,
-    helpers::shrink_and_write_image,
+    helpers::{shrink_and_write_image, delete_files},
     models::product::Product
 };
 
@@ -36,85 +37,115 @@ pub async fn route(
     let product_id = ObjectId::parse_str(path.into_inner().product_id)
         .map_err(|_| AppError::invalid_input("Invalid product id"))?;
     Product::verify_ownership(&db, product_id, vendor._id).await?;
-    let vendor_id = vendor._id;
 
+    process_files_thread(
+        body,
+        vendor._id,
+        product_id,
+        db.get_ref().clone()
+    );
+
+    Ok(HttpResponse::Accepted().json(doc!{"success": true}))
+}
+
+fn process_files_thread(body: Body, vendor: ObjectId, product: ObjectId, db: Database) {
     tokio::spawn(async move {
-        use futures::future::join_all;
 
-        let mut handles = Vec::new();
         let home = std::env::var("HOME_DIR").expect("HOME_DIR not set");
+        let mut handles = Vec::new();
 
         for (image, id) in body.images.into_iter().zip(body.ids.into_iter()) {
-            let temp_filename = format!("/tmp/{}.upload", Uuid::new_v4());
-            image.file.persist(&temp_filename).expect("Failed to persist uploaded file");
-
-            let url = format!(
-                "/vendor-{}/product-{}/{}.avif",
-                vendor._id.to_string(),
-                product_id.to_string(),
-                id.into_inner()
+            let (temp_filename, base_dir, url) = build_image_paths(
+                id.into_inner(),
+                image,
+                &home,
+                &vendor,
+                &product
             );
 
-            let base_dir = format!("{}srv", home);
-            let full_dir = format!("{}{}", &base_dir, &url);
-            let path_obj = std::path::Path::new(&full_dir);
-            if let Some(parent) = path_obj.parent() {
-                std::fs::create_dir_all(parent).expect("Failed to create directory tree");
-            }
-
-            let handle = tokio::task::spawn_blocking(move || {
+            let temp_filename_for_task = temp_filename.clone();
+            handles.push(tokio::task::spawn_blocking(move || {
                 shrink_and_write_image(
-                    temp_filename,
+                    temp_filename_for_task,
                     String::from("50"),
                     String::from("1000"),
                     base_dir,
                     url
                 )
-            });
+            }));
 
-            handles.push(handle);
+            delete_files(vec![temp_filename]);
         }
 
-        let results = join_all(handles).await;
-        let mut urls = Vec::new();
-        for r in results {
-            if let Ok(Ok(url)) = r {
-                urls.push(url);
-            }
-        }
+        let urls = gather_succeeded_urls(handles).await;
 
         if !urls.is_empty() {
             let thumbnail_url = create_thumbnail_url(
                 body.thumbnail,
-                home,
-                vendor._id.to_string(),
-                product_id.to_string()
+                &home,
+                vendor.to_string(),
+                product.to_string()
             );
             match Product::update(
                 &db,
-                product_id,
-                Some(vendor_id),
+                product,
+                Some(vendor),
                 create_update_doc(urls.clone(), thumbnail_url)
             ).await {
                 Ok(_) => (),
                 Err(_) => {
                     for u in urls {
                         let full_path = format!("/srv{}", u);
-                        if let Err(e) = std::fs::remove_file(&full_path) {
-                            eprintln!("Failed to remove orphaned file {}: {:?}", full_path, e);
-                        }
+                        delete_files(vec![full_path]);
                     }
                 }
             };
         }
     });
+}
 
-    Ok(HttpResponse::Accepted().json(doc!{"success": true}))
+fn build_image_paths(
+    id: String,
+    image: TempFile,
+    home: &String,
+    vendor: &ObjectId,
+    product: &ObjectId
+) -> (String, String, String) {
+    let temp_filename = format!("/tmp/{}.upload", Uuid::new_v4());
+    image.file.persist(&temp_filename).expect("Failed to persist uploaded file");
+
+    let base_dir = format!("{}srv", home);
+    let url = format!(
+        "/vendor-{}/product-{}/{}.avif",
+        vendor.to_string(),
+        product.to_string(),
+        id
+    );
+
+    let full_path = format!("{}{}", &base_dir, &url);
+    let path_obj = std::path::Path::new(&full_path);
+    if let Some(parent) = path_obj.parent() {
+        std::fs::create_dir_all(parent).expect("Failed to create directory tree");
+    }
+
+    (temp_filename, base_dir, url)
+}
+
+async fn gather_succeeded_urls(handles: Vec<tokio::task::JoinHandle<Result<String, ()>>>) -> Vec<String> {
+    let results = join_all(handles).await;
+    let mut urls = Vec::new();
+    for r in results {
+        if let Ok(Ok(url)) = r {
+            urls.push(url);
+        }
+    }
+
+    urls
 }
 
 fn create_thumbnail_url(
     uuid: Option<Text<String>>,
-    home: String,
+    home: &String,
     vendor_id: String,
     product_id: String
 ) -> Option<String> {
