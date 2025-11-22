@@ -34,4 +34,5 @@ pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.service(products::get_one::route);
     cfg.service(products::add_images::route);
     cfg.service(products::remove_images::route);
+    cfg.service(products::update::route);
 }

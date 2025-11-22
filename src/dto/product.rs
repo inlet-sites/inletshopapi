@@ -1,5 +1,5 @@
 use serde::{Serialize, Deserialize};
-use mongodb::bson::{Document, doc, oid::ObjectId};
+use mongodb::bson::{Document, DateTime, doc, oid::ObjectId};
 use crate::models::product::{Product, PurchaseOption};
 
 #[derive(Serialize, Deserialize)]
@@ -8,8 +8,9 @@ pub struct ProductVendorDb {
     name: String,
     tags: Vec<String>,
     images: Vec<String>,
+    thumbnail: Option<String>,
     archived: bool,
-    created_at: String,
+    created_at: DateTime,
     prices: Vec<PriceVendorDb>
 }
 
@@ -32,9 +33,17 @@ impl ProductVendorDb {
             "name": 1,
             "tags": 1,
             "images": 1,
+            "thumbnail": 1,
             "archived": 1,
             "created_at": 1,
-            "prices": 1
+            "prices._id": 1,
+            "prices.descriptor": 1,
+            "prices.price": 1,
+            "prices.quantity": 1,
+            "prices.shipping": 1,
+            "prices.images": 1,
+            "prices.purchase_option": 1,
+            "prices.archived": 1
         }
     }
 }
@@ -45,6 +54,8 @@ pub struct ProductVendorResponse {
     name: String,
     tags: Vec<String>,
     images: Vec<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    thumbnail: Option<String>,
     archived: bool,
     created_at: String,
     prices: Vec<PriceVendorResponse>
@@ -69,6 +80,7 @@ impl From<ProductVendorDb> for ProductVendorResponse {
             name: p.name,
             tags: p.tags,
             images: p.images,
+            thumbnail: p.thumbnail,
             archived: p.archived,
             created_at: p.created_at.to_string(),
             prices: p.prices.into_iter()
@@ -98,6 +110,7 @@ impl From<Product> for ProductVendorResponse {
             name: p.name,
             tags: p.tags,
             images: p.images,
+            thumbnail: p.thumbnail,
             archived: p.archived,
             created_at: p.created_at.to_string(),
             prices: p.prices.into_iter()
@@ -127,6 +140,7 @@ pub struct ProductDb {
     name: String,
     tags: Vec<String>,
     images: Vec<String>,
+    thumbnail: Option<String>,
     prices: Vec<PriceDb>
 }
 
@@ -156,6 +170,8 @@ pub struct ProductResponse {
     name: String,
     tags: Vec<String>,
     images: Vec<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    thumbnail: Option<String>,
     prices: Vec<PriceResponse>
 }
 
@@ -178,6 +194,7 @@ impl From<ProductDb> for ProductResponse {
             name: p.name,
             tags: p.tags,
             images: p.images,
+            thumbnail: p.thumbnail,
             prices: p.prices.into_iter().map(|pr| {
                 PriceResponse {
                     id: pr._id.to_string(),
@@ -201,6 +218,7 @@ impl ProductDb {
             "name": 1,
             "tags": 1,
             "images": 1,
+            "thumbnail": 1,
             "prices._id": 1,
             "prices.descriptor": 1,
             "prices.price": 1,
@@ -217,8 +235,7 @@ pub struct ProductShortDb {
     _id: ObjectId,
     name: String,
     tags: Vec<String>,
-    images: Vec<String>,
-    thumbnail_index: Option<u32>,
+    thumbnail: Option<String>,
     prices: Vec<PriceShortDb>
 }
 
@@ -233,8 +250,7 @@ impl ProductShortDb {
             "_id": 1,
             "name": 1,
             "tags": 1,
-            "images": 1,
-            "thumbnail_index": 1,
+            "thumbnail": 1,
             "prices.price": 1
         }
     }
@@ -246,7 +262,7 @@ pub struct ProductShortResponse {
     name: String,
     tags: Vec<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    image: Option<String>,
+    thumbnail: Option<String>,
     price: PriceShortResponse
 }
 
@@ -280,13 +296,7 @@ impl From<ProductShortDb> for ProductShortResponse {
             id: p._id.to_string(),
             name: p.name,
             tags: p.tags,
-            image: if p.images.len() == 0 {
-                None
-            } else if let Some(idx) = p.thumbnail_index {
-                Some(p.images[idx as usize].clone())
-            } else {
-                Some(p.images[0].clone())
-            },
+            thumbnail: p.thumbnail,
             price: get_min_max_price(p.prices)
         }
     }
