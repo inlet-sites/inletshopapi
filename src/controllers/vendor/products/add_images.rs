@@ -178,12 +178,21 @@ mod tests {
     #[test]
     fn valid_doc() {
         let urls = vec![String::from("route/to/image")];
+        let thumbnail = "/vendor/product/1234.avif".to_string();
         let expected: Document = doc! {
-            "$push": {
-                "images": {"$each": urls.clone()}
-            }
+            "$push": {"images": {"$each": urls.clone()}},
+            "$set": {"thumbnail": "/vendor/product/1234.avif"}
         };
-        let result = create_update_doc(urls);
+        let result = create_update_doc(urls, Some(thumbnail));
+
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn valid_doc_no_thumbnail() {
+        let urls = vec!["route/to/image".to_string(), "another/route".to_string()];
+        let expected = doc!{"$push": {"images": {"$each": urls.clone()}}};
+        let result = create_update_doc(urls, None);
 
         assert_eq!(result, expected);
     }

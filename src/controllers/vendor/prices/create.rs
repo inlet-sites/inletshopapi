@@ -53,3 +53,22 @@ fn create_update_doc(p: &Price) -> Document {
         }
     }}
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn valid_update_doc() {
+        let price = Price::new("test".to_string(), 1299, 12, 499, PurchaseOption::Ship);
+
+        let result = create_update_doc(&price);
+        let push = result.get_document("$push").unwrap();
+        let prices = push.get_document("prices").unwrap();
+
+        assert_eq!(prices.get_str("descriptor").unwrap(), "test".to_string());
+        assert_eq!(prices.get_i32("price").unwrap(), 1299);
+        assert_eq!(prices.get_i32("quantity").unwrap(), 12);
+        assert_eq!(prices.get_i32("shipping").unwrap(), 499);
+    }
+}
