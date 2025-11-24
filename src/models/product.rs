@@ -40,6 +40,22 @@ pub enum PurchaseOption {
     List
 }
 
+impl PurchaseOption {
+    pub fn to_string(&self) -> String {
+        match self {
+            PurchaseOption::Ship => "ship".to_string(),
+            PurchaseOption::Buy => "buy".to_string(),
+            PurchaseOption::List => "list".to_string()
+        }
+    }
+}
+
+impl From<PurchaseOption> for String {
+    fn from(p: PurchaseOption) -> Self {
+        p.to_string()
+    }
+}
+
 impl Product {
     pub async fn insert(&self, db: &Database) -> Result<(), AppError> {
         match db.collection::<Product>("products").insert_one(self).await {
@@ -128,5 +144,26 @@ impl Product {
                 Ok(None) => Err(AppError::forbidden("You do not have authorization for this product")),
                 Err(e) => Err(AppError::Database(e.into()))
             }
+    }
+}
+
+impl Price {
+    pub fn new(
+        descriptor: String,
+        price: i32,
+        quantity: i32,
+        shipping: i32,
+        purchase_option: PurchaseOption
+    ) -> Price {
+        Price {
+            _id: ObjectId::new(),
+            descriptor: descriptor,
+            price: price,
+            quantity: quantity,
+            shipping: shipping,
+            images: Vec::new(),
+            purchase_option: purchase_option,
+            archived: false
+        }
     }
 }

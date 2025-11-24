@@ -12,3 +12,4 @@ pub mod create_connect;
 pub mod create_session;
 
 pub mod products;
+pub mod prices;

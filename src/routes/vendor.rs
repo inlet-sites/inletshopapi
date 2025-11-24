@@ -12,7 +12,8 @@ use crate::controllers::vendor::{
     create_connect,
     create_session,
 
-    products
+    products,
+    prices
 };
 
 pub fn config(cfg: &mut web::ServiceConfig) {
@@ -35,4 +36,6 @@ pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.service(products::add_images::route);
     cfg.service(products::remove_images::route);
     cfg.service(products::update::route);
+
+    cfg.service(prices::create::route);
 }
