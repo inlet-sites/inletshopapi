@@ -1,0 +1,62 @@
+operationId: vendorPriceCreate
+summary: Create Price
+security:
+  - VendorAuth: []
+description: Create a new price object on a product
+tags: [Vendor Prices]
+parameters:
+  - name: product_id
+    id: path
+    required: true
+    description: ObjectId of the product to add the price to.
+    schema:
+      type: string
+      format: objectid
+      example: 691f0d6f3e2a4fcd9a8a1db4
+requestBody:
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - description
+        properties:
+          descriptor:
+            type: string
+            description: Short descriptor for the price
+            example: Large
+          price: 
+            type: string
+            description: Cost of this price/variation. In cents.
+            example: 1299
+          quantity:
+            type: number
+            description: Quantity of the item available.
+            example: 12
+          shipping:
+            type: number
+            description: Cost for shipping the item in cents. 0 if no shipping.
+            example: 499
+          purchase_option:
+            type: string
+            enum:
+              - ship
+              - buy
+              - list
+            description: String that determines whether the item is only listed, can be purchased online, or can be purchased online and shipped.
+            example: ship
+responses:
+  "200":
+    description: Price created
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/Price"
+  "400":
+    $ref: "#/components/responses/400"
+  "401":
+    $ref: "#/components/responses/401"
+  "403":
+    $ref: "#/components/responses/403"
+  "500":
+    $ref: "#/components/responses/500"

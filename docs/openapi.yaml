@@ -23,6 +23,7 @@ x-tagGroups:
     tags:
       - Vendor
       - Vendor Products
+      - Vendor Prices
 
 paths:
   #User
@@ -90,6 +91,10 @@ paths:
       $ref: "./paths/vendor/products/add_images.yaml"
     delete:
       $ref: "./paths/vendor/products/remove_images.yaml"
+  #Vendor Prices
+  /vendor/products/{product_id}/prices/:
+    post:
+      $ref: "./paths/vendor/prices/create.yaml"
 
 components:
   schemas:
