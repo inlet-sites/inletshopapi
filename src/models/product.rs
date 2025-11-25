@@ -166,4 +166,25 @@ impl Price {
             archived: false
         }
     }
+
+    pub async fn delete(
+        db: &Database,
+        product_id: ObjectId,
+        price_id: ObjectId,
+        vendor_id: Option<ObjectId>
+    ) -> Result<(), AppError> {
+        let find_doc = match vendor_id {
+            Some(_) => doc!{"_id": product_id, "vendor": vendor_id},
+            None => doc!("_id": product_id)
+        };
+        let update_doc = doc!{"$pull": {"prices": {"_id": price_id}}};
+
+        match db.collection::<Product>("products")
+            .update_one(find_doc, update_doc)
+            .await {
+                Ok(ur) if ur.matched_count == 1  => Ok(()),
+                Ok(_) => Err(AppError::forbidden("Invalid permisssions for this product")),
+                Err(e) => Err(AppError::Database(e.into()))
+            }
+    }
 }
