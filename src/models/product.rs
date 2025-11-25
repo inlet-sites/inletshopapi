@@ -167,6 +167,31 @@ impl Price {
         }
     }
 
+    pub async fn find_by_id<P>(
+        db: &Database,
+        product_id: ObjectId,
+        price_id: ObjectId,
+        vendor_id: Option<ObjectId>,
+        proj: Document
+    ) -> Result<P, AppError>
+        where
+            P: DeserializeOwned + Send + Sync + Unpin
+    {
+        let filter_doc = match vendor_id {
+            Some(v) => doc!{"_id": product_id, "vendor": v, "prices._id": price_id},
+            None => doc!{"_id": product_id, "prices._id": price_id}
+        };
+
+        match db.collection::<P>("products")
+            .find_one(filter_doc)
+            .projection(proj)
+            .await {
+                Ok(Some(p)) => Ok(p),
+                Ok(None) => Err(AppError::forbidden("Invalid permissions for this price")),
+                Err(e) => Err(AppError::Database(e.into()))
+            }
+    }
+
     pub async fn delete(
         db: &Database,
         product_id: ObjectId,
@@ -184,6 +209,24 @@ impl Price {
             .await {
                 Ok(ur) if ur.matched_count == 1  => Ok(()),
                 Ok(_) => Err(AppError::forbidden("Invalid permisssions for this product")),
+                Err(e) => Err(AppError::Database(e.into()))
+            }
+    }
+
+    pub async fn update(
+        db: &Database,
+        product_id: ObjectId,
+        price_id: ObjectId,
+        vendor_id: ObjectId,
+        update_doc: Document
+    ) -> Result<(), AppError> {
+        let filter_doc = doc!{"_id": product_id, "vendor": vendor_id, "prices._id": price_id};
+
+        match db.collection::<Product>("products")
+            .update_one(filter_doc, update_doc)
+            .await {
+                Ok(ur) if ur.matched_count == 1 => Ok(()),
+                Ok(_) => Err(AppError::forbidden("Invalid permissions for this product")),
                 Err(e) => Err(AppError::Database(e.into()))
             }
     }

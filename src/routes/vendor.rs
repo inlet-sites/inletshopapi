@@ -39,4 +39,5 @@ pub fn config(cfg: &mut web::ServiceConfig) {
 
     cfg.service(prices::create::route);
     cfg.service(prices::delete::route);
+    cfg.service(prices::update::route);
 }
