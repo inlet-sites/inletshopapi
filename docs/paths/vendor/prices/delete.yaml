@@ -1,0 +1,52 @@
+operationId: vendorPricesDelete
+summary: Delete Price
+security:
+  - VendorAuth: []
+description: Delete a price from a product. For the purpose of records, the price is not truly deleted, just marked as archived.
+tags: [Vendor Prices]
+parameters:
+  - name: product_id
+    in: path
+    required: true
+    description: Product ID to delete price from.
+    schema:
+      type: string
+      format: objectid
+      example: 6744c8c9f0e3ad1b62a4a19f
+  - name: price_id
+    in: path
+    required: true
+    description: ID of the price to remove from the product
+    schema:
+      type: string
+      format: objectid
+      example: 6744c8c9b1de473f0cf9c72e
+requestBody:
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          descriptor:
+            type: string
+            description: Short description of the price
+            example: Large
+          quantity:
+            type: number
+            description: Quantity available for purchase
+            example: 10
+responses:
+  "200":
+    description: Price updated
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/Price"
+  "400":
+    $ref: "#/components/responses/400"
+  "401":
+    $ref: "#/components/responses/401"
+  "403":
+    $ref: "#/components/responses/403"
+  "500":
+    $ref: "#/components/responses/500"

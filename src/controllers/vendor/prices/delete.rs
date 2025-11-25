@@ -24,7 +24,7 @@ pub async fn route(
     let product_id = ObjectId::parse_str(&path.product_id)
         .map_err(|_| AppError::invalid_input("Invalid product ID"))?;
     let price_id = ObjectId::parse_str(&path.price_id)
-        .map_err(|_| AppError::invalid_input("Invalide price ID"))?;
+        .map_err(|_| AppError::invalid_input("Invalid price ID"))?;
 
     Price::delete(&db, product_id, price_id, Some(vendor._id)).await?;
 

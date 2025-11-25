@@ -95,6 +95,8 @@ paths:
   /vendor/products/{product_id}/prices/:
     post:
       $ref: "./paths/vendor/prices/create.yaml"
+    delete:
+      $ref: "./paths/vendor/prices/delete.yaml"
 
 components:
   schemas:
