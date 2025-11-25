@@ -97,6 +97,8 @@ paths:
       $ref: "./paths/vendor/prices/create.yaml"
     delete:
       $ref: "./paths/vendor/prices/delete.yaml"
+    put:
+      $ref: "./paths/vendor/prices/update.yaml"
 
 components:
   schemas:
