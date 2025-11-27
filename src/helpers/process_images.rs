@@ -1,4 +1,4 @@
-use actix_multipart::form::{tempfile::TempFile, text::Text};
+use actix_multipart::form::tempfile::TempFile;
 use crate::helpers::delete_files;
 use tokio::task::{JoinHandle, spawn_blocking};
 use mongodb::bson::oid::ObjectId;
@@ -8,7 +8,7 @@ use std::process::Command;
 
 pub async fn process_images(
     images: Vec<TempFile>,
-    ids: Vec<Text<String>>,
+    ids: Vec<String>,
     vendor: ObjectId,
     product: ObjectId,
     home: &String
@@ -18,7 +18,7 @@ pub async fn process_images(
 
     for (image, id) in images.into_iter().zip(ids.into_iter()){
         let (temp_filename, base_dir, url) = build_image_paths(
-            id.into_inner(),
+            id,
             image,
             &home,
             &vendor,

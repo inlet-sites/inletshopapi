@@ -36,12 +36,12 @@ pub async fn route(
         .map_err(|_| AppError::invalid_input("Invalid product id"))?;
     Product::verify_ownership(&db, product_id, vendor._id).await?;
 
-    let home = std::env::var("HOME_DIR").expect("HOME_DIR not set");
-
     tokio::spawn(async move {
+        let home = std::env::var("HOME_DIR").expect("HOME_DIR not set");
+
         let image_urls = process_images(
             body.images,
-            body.ids,
+            body.ids.into_iter().map(|i| i.into_inner()).collect(),
             vendor._id,
             product_id,
             &home
