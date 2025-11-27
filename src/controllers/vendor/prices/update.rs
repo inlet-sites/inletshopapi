@@ -5,7 +5,7 @@ use crate::{
     app_error::AppError,
     auth::vendor_auth,
     models::product::Price,
-    dto::price::{VendorDb, VendorResponse}
+    dto::price::VendorResponse
 };
 
 #[derive(Deserialize)]
@@ -37,13 +37,13 @@ pub async fn route(
     let update_doc = create_update_doc(body.into_inner());
 
     Price::update(&db, product_id, price_id, vendor._id, update_doc).await?;
-    let price_response: VendorResponse = Price::find_by_id::<VendorDb>(
+    let price_response = Price::find_by_id::<VendorResponse>(
         &db,
         product_id,
         price_id,
         Some(vendor._id),
-        VendorDb::projection()
-    ).await?.into();
+        VendorResponse::projection()
+    ).await?;
 
     Ok(HttpResponse::Ok().json(price_response))
 }
@@ -53,11 +53,11 @@ fn create_update_doc(body: Body) -> Document {
     let mut set_doc = Document::new();
 
     if let Some(d) = body.descriptor {
-        set_doc.insert("descriptor", d);
+        set_doc.insert("prices.$.descriptor", d);
     }
 
     if let Some(q) = body.quantity {
-        set_doc.insert("quantity", q);
+        set_doc.insert("prices.$.quantity", q);
     }
 
     doc.insert("$set", set_doc);

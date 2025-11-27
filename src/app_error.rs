@@ -64,6 +64,9 @@ impl ResponseError for AppError {
     }
 
     fn error_response(&self) -> HttpResponse {
+        #[cfg(debug_assertions)]
+        eprintln!("{:?}", self);
+
         let body = ErrorBody {
             error: ErrorInfo {
                 code: self.status_code().as_u16(),

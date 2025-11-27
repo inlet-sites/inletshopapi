@@ -175,21 +175,28 @@ impl Price {
         proj: Document
     ) -> Result<P, AppError>
         where
-            P: DeserializeOwned + Send + Sync + Unpin
+            P: From<Document>
     {
         let filter_doc = match vendor_id {
-            Some(v) => doc!{"_id": product_id, "vendor": v, "prices._id": price_id},
-            None => doc!{"_id": product_id, "prices._id": price_id}
+            Some(v) => doc!{"$match": {"_id": product_id, "vendor": v}},
+            None => doc!{"$match": {"_id": product_id}}
         };
 
-        match db.collection::<P>("products")
-            .find_one(filter_doc)
-            .projection(proj)
-            .await {
-                Ok(Some(p)) => Ok(p),
-                Ok(None) => Err(AppError::forbidden("Invalid permissions for this price")),
-                Err(e) => Err(AppError::Database(e.into()))
-            }
+        let pipeline = vec![
+            filter_doc,
+            doc!{"$unwind": "$prices"},
+            doc!{"$match": {"prices._id": price_id}},
+            proj
+        ];
+
+        let mut cursor = db.collection::<Document>("products").aggregate(pipeline).await?;
+
+        match cursor.try_next().await? {
+            Some(p) => {
+                Ok(p.into())
+            },
+            None => Err(AppError::forbidden("Invalid permissions for this price"))
+        }
     }
 
     pub async fn delete(
@@ -199,16 +206,16 @@ impl Price {
         vendor_id: Option<ObjectId>
     ) -> Result<(), AppError> {
         let find_doc = match vendor_id {
-            Some(_) => doc!{"_id": product_id, "vendor": vendor_id},
-            None => doc!("_id": product_id)
+            Some(_) => doc!{"_id": product_id, "vendor": vendor_id, "prices._id": price_id},
+            None => doc!{"_id": product_id, "prices._id": price_id}
         };
-        let update_doc = doc!{"$pull": {"prices": {"_id": price_id}}};
+        let update_doc = doc!{"$set": {"prices.$.archived": true}};
 
         match db.collection::<Product>("products")
             .update_one(find_doc, update_doc)
             .await {
                 Ok(ur) if ur.matched_count == 1  => Ok(()),
-                Ok(_) => Err(AppError::forbidden("Invalid permisssions for this product")),
+                Ok(_) => Err(AppError::forbidden("Invalid permissions for this product")),
                 Err(e) => Err(AppError::Database(e.into()))
             }
     }
@@ -222,7 +229,7 @@ impl Price {
     ) -> Result<(), AppError> {
         let filter_doc = doc!{"_id": product_id, "vendor": vendor_id, "prices._id": price_id};
 
-        match db.collection::<Product>("products")
+        match db.collection::<Document>("products")
             .update_one(filter_doc, update_doc)
             .await {
                 Ok(ur) if ur.matched_count == 1 => Ok(()),

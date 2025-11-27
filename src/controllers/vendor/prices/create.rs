@@ -42,7 +42,7 @@ pub async fn route(
 fn create_update_doc(p: &Price) -> Document {
     doc!{"$push": {
         "prices": {
-            "_id": p._id.to_string(),
+            "_id": p._id,
             "descriptor": &p.descriptor,
             "price": p.price,
             "quantity": p.quantity,
