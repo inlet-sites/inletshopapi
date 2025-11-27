@@ -34,7 +34,7 @@ pub async fn route(
         doc!{"$pullAll": {"images": &image_urls}}
     ).await?;
 
-    delete_files(image_urls);
+    delete_files(image_urls, true);
 
     Ok(HttpResponse::Ok().json(doc!{"success": true}))
 }
