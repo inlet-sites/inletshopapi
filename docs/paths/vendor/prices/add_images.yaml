@@ -1,0 +1,58 @@
+operationId: vendorPricesAddImages
+summary: Add Images
+security:
+  - VendorAuth: []
+description: Add one or more images to the list of price images
+tags: [Vendor Prices]
+parameters:
+  - name: product_id
+    in: path
+    required: true
+    description: ObjectId of the product
+    schema:
+      type: string
+      format: objectid
+      example: 68b3e0f0fb6bd1f1aa9cd3c1
+  - name: price_id
+    in: path
+    required: true
+    description: ObjectId of the price
+    schema:
+      type: string
+      format: objectid
+      example: 68b3e0f0fb6bd1f1aa9cd3c4
+requestBody:
+  required: true
+  content:
+    multipart/form-data:
+      schema:
+        type: object
+        required:
+          - images
+        properties:
+          images:
+            type: array
+            description: "List of images to add to the price (Max total payload: 50MB)"
+            items:
+              type: string
+              format: binary
+responses:
+  "202":
+    description: Image processing in progress
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            success:
+              type: boolean
+              description: Always true
+              example: true
+  "400":
+    $ref: "#/components/responses/400"
+  "401":
+    $ref: "#/components/responses/401"
+  "403":
+    $ref: "#/components/responses/403"
+  "500":
+    $ref: "#/components/responses/500"
